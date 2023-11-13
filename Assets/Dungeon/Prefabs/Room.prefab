@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5108731737950186549
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7270373963376208059}
+  - component: {fileID: 1493123325285204704}
+  m_Layer: 0
+  m_Name: Room
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7270373963376208059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5108731737950186549}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1493123325285204704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5108731737950186549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e06206ca783311e4f9ee04aef5f2e009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingPosX: -3
+  startingPosY: -3
+  minWidth: 10
+  maxWidth: 15
+  minHeight: 7
+  maxHeight: 12
+  isSquare: 1
+  randomwalkSteps: 30
+  groundTilemap: {fileID: 0}
+  wallTilemap: {fileID: 0}
+  groundTiles: {fileID: 11400000, guid: 5f074e01d39efc14e9145adf64071e01, type: 2}
+  leftWallTiles: {fileID: 11400000, guid: acf8c46be9ae1c14680790d483c72c2c, type: 2}
+  rightWallTiles: {fileID: 11400000, guid: acf8c46be9ae1c14680790d483c72c2c, type: 2}
+  topWallTiles: {fileID: 11400000, guid: acf8c46be9ae1c14680790d483c72c2c, type: 2}
+  bottomWallTiles: {fileID: 11400000, guid: acf8c46be9ae1c14680790d483c72c2c, type: 2}
