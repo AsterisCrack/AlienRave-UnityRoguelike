@@ -66,32 +66,9 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         empty
     }
     //Matrix to store the full map
-    private TileType[,] mapMatrix;
     private bool[,] roomMatrix;
     private int matrixDisplacementX;
     private int matrixDisplacementY;
-
-    private void UpdateBoolMatrix()
-    {
-        //Function to update the bool matrix according to the mapMatrix
-        bool[,] newMatrix = new bool[mapMatrix.GetLength(0), mapMatrix.GetLength(1)];
-        for (int i = 0; i < mapMatrix.GetLength(0); i++)
-        {
-            for (int j = 0; j < mapMatrix.GetLength(1); j++)
-            {
-                //If there is anything but a null in the mapMatrix, we set the bool matrix to true
-                if (mapMatrix[i, j] != TileType.empty)
-                {
-                    newMatrix[i, j] = true;
-                }
-                else
-                {
-                    newMatrix[i, j] = false;
-                }
-            }
-        }
-        roomMatrix = newMatrix;
-    }
 
     private void AddRoomToMatrix(float x, float y, int roomWidth, int roomHeight, Room room)
     {
@@ -113,33 +90,21 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         {
             roomMatrix = new bool[roomWidth, roomHeight];
         }
-        if (mapMatrix == null)
-        {
-            mapMatrix = new TileType[roomWidth, roomHeight];
-            //Set all the positions to empty tile 
-            for (int i = 0; i < mapMatrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < mapMatrix.GetLength(1); j++)
-                {
-                    mapMatrix[i, j] = TileType.empty;
-                }
-            }
-        }
 
-        if (centerX + roomWidth / 2 > mapMatrix.GetLength(0) + matrixDisplacementX)
+        if (centerX + roomWidth / 2 > roomMatrix.GetLength(0) + matrixDisplacementX)
         {
             //We need to add more columns to the right
-            numColumnsRigth = (int)Mathf.Ceil(centerX + roomWidth / 2 - matrixDisplacementX - mapMatrix.GetLength(0));
+            numColumnsRigth = (int)Mathf.Ceil(centerX + roomWidth / 2 - matrixDisplacementX - roomMatrix.GetLength(0));
         }   
         if (centerX - roomWidth / 2 < 0 + matrixDisplacementX)
         {
             //We need to add more columns to the left
             numColumnsLeft = matrixDisplacementX + (int)Mathf.Ceil(Mathf.Abs(centerX - roomWidth / 2));
         }
-        if (centerY + roomHeight/2 + 1 > mapMatrix.GetLength(1) + matrixDisplacementY)
+        if (centerY + roomHeight/2 + 1 > roomMatrix.GetLength(1) + matrixDisplacementY)
         {
             //We need to add more rows to the top
-            numRowsTop = (int)Mathf.Ceil(centerY + roomHeight / 2 - matrixDisplacementY - mapMatrix.GetLength(1)) + 1;
+            numRowsTop = (int)Mathf.Ceil(centerY + roomHeight / 2 - matrixDisplacementY - roomMatrix.GetLength(1)) + 1;
         }
         if (centerY - roomHeight / 2 < 0 + matrixDisplacementY)
         {
@@ -148,52 +113,42 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         }
 
         //Now we need to create a new matrix with the new size
-        TileType[,] newMatrix = new TileType[mapMatrix.GetLength(0) + numColumnsLeft + numColumnsRigth, mapMatrix.GetLength(1) + numRowsTop + numRowsBottom];
+        bool[,] newMatrix = new bool[roomMatrix.GetLength(0) + numColumnsLeft + numColumnsRigth, roomMatrix.GetLength(1) + numRowsTop + numRowsBottom];
         //Set all the positions to empty tile
         for (int i = 0; i < newMatrix.GetLength(0); i++)
         {
             for (int j = 0; j < newMatrix.GetLength(1); j++)
             {
-                newMatrix[i, j] = TileType.empty;
+                newMatrix[i, j] = false;
             }
         }
         //Now we need to copy the old matrix to the new one
-        for (int i = 0; i < mapMatrix.GetLength(0); i++)
+        for (int i = 0; i < roomMatrix.GetLength(0); i++)
         {
-            for (int j = 0; j < mapMatrix.GetLength(1); j++)
+            for (int j = 0; j < roomMatrix.GetLength(1); j++)
             {
-                newMatrix[i + numColumnsLeft, j + numRowsBottom] = mapMatrix[i, j];
+                newMatrix[i + numColumnsLeft, j + numRowsBottom] = roomMatrix[i, j];
             }
         }
 
         //Now we need to update the mapMatrix
-        mapMatrix = newMatrix;
+        roomMatrix = newMatrix;
 
         //Now we need to update the displacement
         matrixDisplacementX -= numColumnsLeft;
         matrixDisplacementY -= numRowsBottom;
 
         //Now we update the matrix by adding the new room
-        (bool[,] groundMatrix, bool[,] leftWallMatrix, bool[,] rightWallMatrix, bool[,] topWallMatrix, bool[,] bottomWallMatrix) = room.GetRoomMatrix();
+        bool[,] groundMatrix = room.GetRoomMatrix();
         //Stablish the starting points of the room
         int groundStartingPosX = centerX - groundMatrix.GetLength(0) / 2 - matrixDisplacementX;
         int groundStartingPosY = centerY - groundMatrix.GetLength(1) / 2 - matrixDisplacementY;
 
-        int wallStartingPosX = centerX - leftWallMatrix.GetLength(0) / 2 - matrixDisplacementX;
-        int wallStartingPosY = centerY - leftWallMatrix.GetLength(1) / 2 - matrixDisplacementY;
-
         //Now we need to update the mapMatrix
-        MergeMatrix(mapMatrix, groundMatrix, TileType.Ground, groundStartingPosX, groundStartingPosY);
-        MergeMatrix(mapMatrix, leftWallMatrix, TileType.leftWall, wallStartingPosX, wallStartingPosY);
-        MergeMatrix(mapMatrix, rightWallMatrix, TileType.rightWall, wallStartingPosX, wallStartingPosY);
-        MergeMatrix(mapMatrix, topWallMatrix, TileType.topWall, wallStartingPosX, wallStartingPosY);
-        MergeMatrix(mapMatrix, bottomWallMatrix, TileType.bottomWall, wallStartingPosX, wallStartingPosY);
-
-        //Update the bool matrix
-        UpdateBoolMatrix();
+        MergeMatrix(roomMatrix, groundMatrix, groundStartingPosX, groundStartingPosY);
     }
 
-    private void MergeMatrix(TileType[,] map, bool[,] matrix, TileType tiletype, int centerX, int centerY)
+    private void MergeMatrix(bool[,] map, bool[,] matrix, int centerX, int centerY)
     {
         if (map == null)
         {
@@ -218,7 +173,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                         //Now we need to check if the position is true in the matrix
                         if (matrix[i, j])
                         {
-                            map[i + centerX, j + centerY] = tiletype;
+                            map[i + centerX, j + centerY] = true;
                         }
                     }
                 }
@@ -253,7 +208,6 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         //Empty the lists
         nodes = new List<Node>();
         edges = new List<Edge>();
-        mapMatrix = null;
         roomMatrix = null;
         matrixDisplacementX = 0;
         matrixDisplacementY = 0;
@@ -327,7 +281,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         //Add the room to the mapMatrix
         AddRoomToMatrix(0, 0, roomWidth, roomHeight, roomInstance);
         //Add the node to the list
-        nodes.Add(new Node(0, 0, 0, roomWidth, roomHeight));
+        nodes.Add(new Node(0, 0, 0, roomInstance, roomWidth, roomHeight));
 
         //Generate the rooms
         for (int i = 1; i < numRooms; i++)
@@ -372,7 +326,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             //Now we have a matrix with the frontier of the graph, but the frontier is too wide, we just need a single line wide frontier
             //We will do it by dilating the matrix with a 3x3 kernel without center point
             bool[,] frontierMatrix = matrixDilation.DilateOnlyFrontier(dilatedMatrix, simpleKernel);
-            drawBoolMap(frontierMatrix, matrixDisplacementX - spaceX - 2, matrixDisplacementY - spaceY - 2);
+            
             //Now we have the frontier, we need to find a random point in the frontier to place the room
             //We will do it by creating a list of all the points in the frontier
             List<Vector2> frontierList = GetFrontierList(frontierMatrix, matrixDisplacementX - spaceX - 2, matrixDisplacementY - spaceY - 2);
@@ -384,7 +338,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             AddRoomToMatrix(roomPos.x, roomPos.y, roomWidth, roomHeight, roomInstance);
 
             //Now we need to add the node to the list
-            nodes.Add(new Node(i, (int)roomPos.x, (int)roomPos.y, roomWidth, roomHeight));
+            nodes.Add(new Node(i, (int)roomPos.x, (int)roomPos.y, roomInstance, roomWidth, roomHeight));
         }
         return nodes;
     }
@@ -675,10 +629,10 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         public int right = 0;
         public NodeRanges(Node n, int displacementX = 0, int displacementY = 0)
         {
-            top = (int)Mathf.Ceil(n.Position.y + n.RoomHeight / 2 - 1 - displacementY);
-            bottom = (int)Mathf.Ceil(n.Position.y - n.RoomHeight / 2 + 1 - displacementY);
-            left = (int)Mathf.Ceil(n.Position.x - n.RoomWidth / 2 + 1 - displacementX);
-            right = (int)Mathf.Ceil(n.Position.x + n.RoomWidth / 2 - 1 - displacementX);
+            top = (int)n.Position.y + n.RoomHeight / 2 - 1 - displacementY;
+            bottom = (int)n.Position.y - n.RoomHeight / 2 + 1 - displacementY;
+            left = (int)n.Position.x - n.RoomWidth / 2 + 1 - displacementX;
+            right = (int)n.Position.x + n.RoomWidth / 2 - 1 - displacementX;
         }
     }
 
@@ -741,7 +695,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                         {
                             for (int j = -1; j <= hallwayWidth; j++)
                             {
-                                if (mapMatrix[p + j, i] == TileType.Ground) possible = false;
+                                if (roomMatrix[p + j, i]) possible = false;
                             }
                             if(!possible)
                             {
@@ -763,7 +717,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                         {
                             for (int j = -1; j <= hallwayWidth; j++)
                             {
-                                if (mapMatrix[i, p + j] == TileType.Ground) possible = false;
+                                if (roomMatrix[i, p + j]) possible = false;
                             }
                             if (!possible)
                             {
@@ -794,11 +748,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                     {
                         for (int j = 0; j < hallwayWidth; j++)
                         {
-                            mapMatrix[hallwayPos + j, i] = TileType.Ground;
+                            roomMatrix[hallwayPos + j, i] = true;
                         }
-                        //and walls
-                        mapMatrix[hallwayPos - 1, i] = TileType.leftWall;
-                        mapMatrix[hallwayPos + hallwayWidth, i] = TileType.rightWall;
                     }
                 }
                 else
@@ -807,12 +758,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                     {
                         for (int j = 0; j < hallwayWidth; j++)
                         {
-                            mapMatrix[i, hallwayPos + j] = TileType.Ground;
+                            roomMatrix[i, hallwayPos + j] = true;
                         }
-                        //and walls
-                        mapMatrix[i, hallwayPos - 1] = TileType.bottomWall;
-                        mapMatrix[i, hallwayPos + hallwayWidth] = TileType.topWall;
-                        mapMatrix[i, hallwayPos + hallwayWidth + 1] = TileType.topWall;
                     }
                 }
             }
@@ -841,7 +788,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                     {
                         for (int j = r3; j < r4; j++)
                         {
-                            if (mapMatrix[i, j] != TileType.empty)// && mapMatrix[i, j] != TileType.rightWall && mapMatrix[i, j-2] != TileType.Ground
+                            if (roomMatrix[i, j] || roomMatrix[i-1, j] || roomMatrix[i+1, j])
                             {
                                 //Its not possible to extend the wall. Delete the previous walls
                                 for (int k = r3; k < j; k++)
@@ -863,7 +810,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                     {
                         for (int j = r3; j < r4; j++)
                         {
-                            if (mapMatrix[j, i] != TileType.empty) // && mapMatrix[j, i] != TileType.rightWall && mapMatrix[j, i-2] != TileType.Ground
+                            if (roomMatrix[j, i] || roomMatrix[j, i - 1] || roomMatrix[j, i + 1])
                             {
                                 //Its not possible to extend the wall. Delete the previous walls
                                 for (int k = r3; k < j; k++)
@@ -881,7 +828,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                 }
 
                 //Matices the same size as map that store the extended walls
-                bool[,] corridors = new bool[mapMatrix.GetLength(0), mapMatrix.GetLength(1)];
+                bool[,] corridors = new bool[roomMatrix.GetLength(0), roomMatrix.GetLength(1)];
 
                 ExtendCorridorVertical(corridors, nodeTopRanges.left, nodeTopRanges.right, nodeBottomRanges.bottom, nodeTopRanges.bottom-1);
                 ExtendCorridorVertical(corridors, nodeBottomRanges.left, nodeBottomRanges.right, nodeBottomRanges.top+2, nodeTopRanges.top);
@@ -1020,51 +967,32 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
 
                     //We know that it has to start on s1 because it is the vertical part
                     int start = (int)selectedCorner[0][s1].x;
-                    int yStart = (selectedCorner[0][s1] == posBottom) ? (int)posBottom.y - 2 : (int)posBottom.y - 1;
+                    int yStart = (selectedCorner[0][s1] == posBottom) ? (int)posBottom.y - 2 : (int)posBottom.y;
                     for (int i = yStart; i < posTop.y + 2; i++)
                     {
                         for (int j = 0; j < hallwayWidth; j++)
                         {
-                            mapMatrix[start + j, i] = TileType.Ground;
+                            roomMatrix[start + j, i] = true;
                         }
-                        //and walls
-                        mapMatrix[start - 1, i] = TileType.leftWall;
-                        mapMatrix[start + hallwayWidth, i] = TileType.rightWall;
                     }
 
                     //Horizontal part. Starts on s2
                     start = (int)selectedCorner[1][s2].y;
-                    int xStart = (selectedCorner[1][s2] == posLeft) ? (int)posLeft.x - 1 : (int)posLeft.x;
-                    //Here we have to take cate so that it doesnt intersect with the vertical part
-                    int topWallLen = selectedCorner[1][s2] == posTop ? (int)posRight.x + hallwayWidth - xStart : (int)posRight.x - 1 - xStart;
-                    int bottomWallLen = selectedCorner[1][s2] == posBottom ? (int)posRight.x + hallwayWidth - xStart : (int)posRight.x - 1 - xStart;
-                    int topWallStart = selectedCorner[1][s2] == posLeft ? xStart : selectedCorner[1][s2] == posBottom ? xStart + hallwayWidth : xStart - 1;
-                    int bottomWallStart = selectedCorner[1][s2] == posLeft ? xStart : selectedCorner[1][s2] == posBottom ? xStart -1 : xStart + hallwayWidth;
+                    int xStart = (selectedCorner[1][s2] == posLeft) ? (int)posLeft.x - 1 : (int)posLeft.x;            
 
                     for (int i = xStart; i < posRight.x + 1; i++)
                     {
                         for (int j = 0; j < hallwayWidth; j++)
                         {
-                            mapMatrix[i, start + j] = TileType.Ground;
+                            roomMatrix[i, start + j] = true;
                         }
                     }
                     if (selectedCorner[1][s2] == posRight)
                     {
                         for (int j = 0; j < hallwayWidth; j++)
                         {
-                            mapMatrix[(int)posRight.x + 1, start + j] = TileType.Ground;
+                            roomMatrix[(int)posRight.x + 1, start + j] = true;
                         }
-                    }
-
-                    //and walls
-                    for (int i = 0; i <= topWallLen; i++)
-                    {
-                        mapMatrix[topWallStart + i, start + hallwayWidth] = TileType.topWall;
-                        mapMatrix[topWallStart + i, start + hallwayWidth+1] = TileType.topWall;
-                    }
-                    for (int i = 0; i <= bottomWallLen; i++)
-                    {
-                        mapMatrix[bottomWallStart + i, start - 1] = TileType.bottomWall;
                     }
                 }
                 else
@@ -1178,7 +1106,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     private void DrawTilemap()
     {
         //Draw the tilemap
-        if (mapMatrix == null)
+        if (roomMatrix == null)
         {
             return;
         }
@@ -1187,45 +1115,34 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         tilemap.ClearAllTiles();
         wallTilemap.ClearAllTiles();
 
-        for (int i = 0; i < mapMatrix.GetLength(0); i++)
+        void PaintMatrix(Tilemap tilemap, RuleTile ruleTile, bool[,] matrix)
         {
-            for (int j = 0; j < mapMatrix.GetLength(1); j++)
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                Vector3Int pos = new Vector3Int(i+matrixDisplacementX, j + matrixDisplacementY, 0);
-                RuleTile tile = null;
-                switch (mapMatrix[i, j])
+                for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    case TileType.Ground:
-                        tile = groundTile;
-                        break;
-                    case TileType.leftWall:
-                        tile = wallTile;
-                        break;
-                    case TileType.rightWall:
-                        tile = wallTile;
-                        break;
-                    case TileType.topWall:
-                        tile = wallTile;
-                        break;
-                    case TileType.bottomWall:
-                        tile = wallTile;
-                        break;
-                    case TileType.empty:
-                        tile = emptyTile;
-                        break;
-                    default:
-                        break;
-                }
-                if (tile == groundTile)
-                {
-                    tilemap.SetTile(pos, tile);
-                }
-                else
-                {
-                    wallTilemap.SetTile(pos, tile);
+                    if (matrix[i, j])
+                    {
+                        Vector3Int pos = new Vector3Int(i + matrixDisplacementX, j + matrixDisplacementY, 0);
+                        tilemap.SetTile(pos, ruleTile);
+                    }
                 }
             }
         }
+        (bool[,] wallsTop, bool[,] wallsBottom, bool[,] wallsLeft, bool[,] wallsRight) = matrixDilation.GetWallDilations(roomMatrix);
+        PaintMatrix(tilemap, groundTile, roomMatrix);
+        PaintMatrix(wallTilemap, wallTile, wallsTop);
+        PaintMatrix(wallTilemap, wallTile, wallsBottom);
+        PaintMatrix(wallTilemap, wallTile, wallsLeft);
+        PaintMatrix(wallTilemap, wallTile, wallsRight);
+
+        //Draw the rooms
+        //IGNORE FOR THE MOMENT!!
+        //WILL BE USED WHEN ROOM TYPES HAVE DIFFERENT TILES
+        //foreach (Node node in nodes)
+        //{
+        //node.room.PaintWholeRoom(tilemap, wallTilemap, groundTile, wallTile, wallTile, wallTile, wallTile, (int)node.Position.x, (int)node.Position.y);
+        //}
     }
 
     private void drawBoolMap(bool[,] matrix = null, int matrixDisplacementX = 0, int matrixDisplacementY = 0)
