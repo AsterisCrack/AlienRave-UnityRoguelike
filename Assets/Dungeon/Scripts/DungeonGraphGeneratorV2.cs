@@ -653,6 +653,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         //Get the 2 furthst nodes. One will be entrance and the other the boss room
         Node entrance = GetFurthestNode(nodes[0]);
         Node boss = GetFurthestNode(entrance);
+        entrance.type = Node.roomType.start;
+        boss.type = Node.roomType.boss;
 
         //Now set the depth of each node
         entrance.depth = 0;
