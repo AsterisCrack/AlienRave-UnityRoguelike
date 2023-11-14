@@ -25,6 +25,7 @@ public class Node
     public int RoomHeight { get { return roomHeight; } }
 
     public int rank;
+    public int depth;
 
     //Initialise the node
     public Node(int id, int x, int y, int roomWidth=0, int roomHeight=0, roomType type=roomType.normal)
@@ -41,6 +42,7 @@ public class Node
         safeRadius = (float)Mathf.Min(roomWidth, roomHeight) / 2;
 
         rank = 0;
+        depth = 0;
         //Set the type of the room
         this.type = type;
     }

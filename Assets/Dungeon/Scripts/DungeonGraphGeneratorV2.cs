@@ -249,6 +249,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     //Initialise the graph
     public void InitialiseGraph()
     {
+        //Measure times of each function
         //Empty the lists
         nodes = new List<Node>();
         edges = new List<Edge>();
@@ -258,10 +259,33 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         matrixDisplacementY = 0;
 
         //Generate the nodes
+        //Measure time 
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         nodes = GenerateNodes();
+        stopwatch.Stop();
+        Debug.Log("Nodes generated in: " + stopwatch.ElapsedMilliseconds + " ms");
+
         //Generate the edges
+        stopwatch.Reset();
+        stopwatch.Start();
         edges = GenerateEdges();
+        stopwatch.Stop();
+        Debug.Log("Edges generated in: " + stopwatch.ElapsedMilliseconds + " ms");
+
+        //Generate the hallways
+        stopwatch.Reset();
+        stopwatch.Start();
         GenerateHallways();
+        stopwatch.Stop();
+        Debug.Log("Hallways generated in: " + stopwatch.ElapsedMilliseconds + " ms");
+
+        //Get room depths
+        stopwatch.Reset();
+        stopwatch.Start();
+        GetRoomDepths();
+        stopwatch.Stop();
+        Debug.Log("Room depths calculated in: " + stopwatch.ElapsedMilliseconds + " ms");
 
         //Print number of nodes and edges and the number of nodes in the force graph
         Debug.Log("Nodes: " + nodes.Count + " Edges: " + edges.Count);
@@ -269,7 +293,11 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         if (drawTilemap)
         {
             //drawBoolMap();
+            stopwatch.Reset();
+            stopwatch.Start();
             DrawTilemap();
+            stopwatch.Stop();
+            Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
         }
     }
 
@@ -520,6 +548,121 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             nodes[1].AddNeighbour(nodes[0]);
         }
         return edges;
+    }
+
+    private int CalculateNodeDistance(Node n1, Node n2)
+    {
+        //Calculate the distance in the graph between two nodes
+        //We will use BFS
+        //First we need to create a queue to store the nodes to visit
+        Queue<Node> queue = new Queue<Node>();
+        //Create a dictionary to store the distance of each node
+        Dictionary<Node, int> distance = new Dictionary<Node, int>();
+        //Create a dictionary to store the parent of each node
+        Dictionary<Node, Node> parent = new Dictionary<Node, Node>();
+
+        //Initialize the distance of each node to infinity
+        foreach (Node node in nodes)
+        {
+            distance[node] = int.MaxValue;
+        }
+
+        //Initialize the distance of the first node to 0
+        distance[n1] = 0;
+        //Add the first node to the queue
+        queue.Enqueue(n1);
+
+        //Iterate over the queue
+        while (queue.Count > 0)
+        {
+            //Get the first node in the queue
+            Node node = queue.Dequeue();
+            //Iterate over the neighbours of the node
+            foreach (Node neighbour in node.neighbours)
+            {
+                //If the distance of the neighbour is infinity, add it to the queue
+                if (distance[neighbour] == int.MaxValue)
+                {
+                    queue.Enqueue(neighbour);
+                    //Set the distance of the neighbour to the distance of the node + 1
+                    distance[neighbour] = distance[node] + 1;
+                    //Set the parent of the neighbour to the node
+                    parent[neighbour] = node;
+                }
+            }
+        }
+        //Return the distance of the second node
+        return distance[n2];
+    }
+
+    private Node GetFurthestNode(Node n)
+    {
+        //Function to get the furthest node from a node
+        //We will use BFS
+        //First we need to create a queue to store the nodes to visit
+        Queue<Node> queue = new Queue<Node>();
+        //Create a dictionary to store the distance of each node
+        Dictionary<Node, int> distance = new Dictionary<Node, int>();
+        //Create a dictionary to store the parent of each node
+        Dictionary<Node, Node> parent = new Dictionary<Node, Node>();
+        foreach (Node node in nodes)
+        {
+            //Initialize the distance of each node to infinity
+            distance[node] = int.MaxValue;
+            parent[node] = node;
+        }
+
+        //Initialize the distance of the first node to 0
+        distance[n] = 0;
+        //Add the first node to the queue
+        queue.Enqueue(n);
+        while (queue.Count > 0)
+        {
+            //Get the first node in the queue
+            Node node = queue.Dequeue();
+            //Iterate over the neighbours of the node
+            foreach (Node neighbour in node.neighbours)
+            {
+                //If the distance of the neighbour is infinity, add it to the queue
+                if (distance[neighbour] == int.MaxValue)
+                {
+                    queue.Enqueue(neighbour);
+                    //Set the distance of the neighbour to the distance of the node + 1
+                    distance[neighbour] = distance[node] + 1;
+                    //Set the parent of the neighbour to the node
+                    parent[neighbour] = node;
+                }
+            }
+        }
+        //Now we need to find the node with the maximum distance
+        int maxDistance = 0;
+        Node furthestNode = null;
+        foreach (Node node in nodes)
+        {
+            if (distance[node] > maxDistance)
+            {
+                maxDistance = distance[node];
+                furthestNode = node;
+            }
+        }
+        return furthestNode;
+    }
+
+    private void GetRoomDepths()
+    {
+        //Get the 2 furthst nodes. One will be entrance and the other the boss room
+        Node entrance = GetFurthestNode(nodes[0]);
+        Node boss = GetFurthestNode(entrance);
+
+        //Now set the depth of each node
+        entrance.depth = 0;
+        foreach (Node node in nodes)
+        {
+            if (node != entrance)
+            {
+                node.depth = CalculateNodeDistance(entrance, node);
+            }
+        }
     }
 
     public class NodeRanges
@@ -946,6 +1089,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         }
         else
         {
+            Debug.Log("Failed to generate the graph. Retrying...");
+
             InitialiseGraph();
         }
     }
@@ -978,12 +1123,31 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         //Draw node points
         if (nodes == null) return;
         Gizmos.color = Color.green;
+
         foreach (var node in nodes)
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(
+            if (node.type == Node.roomType.start)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(
+                node.Position * nodeSize + offset,
+                           .50f * nodeSize);
+            }
+            else if (node.type == Node.roomType.boss)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(
+                node.Position * nodeSize + offset,
+                           .50f * nodeSize);
+            }
+            else
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(
                 node.Position * nodeSize + offset,
                            .25f * nodeSize);
+            }
+            
 
             //Draw the safe radius
             if (drawFrontier)
@@ -992,6 +1156,13 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                 //Draw a rectangle with node.width and node.height
                 Gizmos.DrawWireCube(node.Position * nodeSize + offset, new Vector3(node.RoomWidth * nodeSize, node.RoomHeight * nodeSize, 0));
             }
+
+            //Text of node.rank
+            GUIStyle style = new GUIStyle();
+            style.normal.textColor = Color.white;
+            style.fontSize = 10;
+            UnityEditor.Handles.Label(node.Position * nodeSize + offset, node.depth.ToString(), style);
+
         }
 
         Gizmos.color = Color.yellow;
