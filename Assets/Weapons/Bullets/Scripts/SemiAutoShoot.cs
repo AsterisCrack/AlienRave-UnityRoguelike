@@ -17,6 +17,7 @@ public class SemiAutoShoot : MonoBehaviour
     private float reloadTime;
     private InputAction shootAction;
     private InputAction reloadAction;
+    private PlayerMovement playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -30,18 +31,27 @@ public class SemiAutoShoot : MonoBehaviour
         reloadTime = emmiterSettings.ReloadTime;
         shootAction = emmiterSettings.ShootAction;
         reloadAction = emmiterSettings.ReloadAction;
+        playerMovement = GetComponentInParent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (shootAction.WasPressedThisFrame() && canShoot && !isReloading)
+        if (shootAction.WasPressedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
         {
             if (currentClip > 0)
             {
                 Shoot();
             }
             else
+            {
+                StartCoroutine(Reload());
+            }
+        }
+
+        else if (reloadAction.WasPerformedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
+        {
+            if (currentClip < emmiterSettings.ClipSize)
             {
                 StartCoroutine(Reload());
             }

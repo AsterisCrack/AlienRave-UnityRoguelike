@@ -16,6 +16,7 @@ public class AutoShoot : MonoBehaviour
     private float reloadTime;
     private InputAction shootAction;
     private InputAction reloadAction;
+    private PlayerMovement playerMovement;
 
 
     // Start is called before the first frame update
@@ -30,25 +31,37 @@ public class AutoShoot : MonoBehaviour
         reloadTime = emmiterSettings.ReloadTime;
         shootAction = emmiterSettings.ShootAction;
         reloadAction = emmiterSettings.ReloadAction;
+        playerMovement = GetComponentInParent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (shootAction.IsPressed() && canShoot && !isReloading)
+        if (shootAction.IsPressed() && canShoot && !isReloading && !playerMovement.IsDashing)
         {
             if (currentClip > 0)
             {
                 Shoot();
             }
         }
-        if (shootAction.WasReleasedThisFrame() && canShoot && !isReloading)
+
+        else if (reloadAction.WasPerformedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
+        {
+            if (currentClip < emmiterSettings.ClipSize)
+            {
+                StartCoroutine(Reload());
+            }
+        }
+
+        if (shootAction.WasReleasedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
         {
             if (currentClip <= 0)
             {
                 StartCoroutine(Reload());
             }
         }
+
+        
 
         if (cooldownTimer > 0)
         {

@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashCooldown = 0.3f;
 
     private bool isDashing = false;
+    public bool IsDashing { get { return isDashing; } }
     private bool canDash = true;
     private float dashDistanceLeft;
 
@@ -111,30 +112,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void AnimateMovement(Vector2 dir)
     {
-        //Set the animator parameters to correct animation
-        //Only 2 variables are needed, the rest of the logic is handled in the animator
-        //Player has to look at mouse position
-        mousePosition = Camera.main.ScreenToWorldPoint(aim.ReadValue<Vector2>());
-        float angle = Mathf.Atan2(mousePosition.y - transform.position.y, mousePosition.x - transform.position.x) * Mathf.Rad2Deg;
-        angle = (angle + 360 + 90) % 360;
-
-        //Flip if needed to animate correctly
-        gameObject.GetComponent<SpriteRenderer>().flipX = (angle > 180) ? true : false;
-        //Set the animator parameters
-        if (angle > 180)
-        {
-            angle = 360 - angle;
-        }
+        
         //Check if it is not during a dash animation and wait till it is over
         List<string> dashingAnimNames = new List<string> { "RollUp", "RollDown", "RollRight", "RollRightUp",};
-        if (dashingAnimNames.Contains(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name))
-        {
-            Debug.Log(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
-        }
-        
+
         //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         if (!dashingAnimNames.Contains(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name) || animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
         {
+            //Set weapon to visible
+            gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = true;
+
+            //Set the animator parameters to correct animation
+            //Only 2 variables are needed, the rest of the logic is handled in the animator
+            //Player has to look at mouse position
+            mousePosition = Camera.main.ScreenToWorldPoint(aim.ReadValue<Vector2>());
+            float angle = Mathf.Atan2(mousePosition.y - transform.position.y, mousePosition.x - transform.position.x) * Mathf.Rad2Deg;
+            angle = (angle + 360 + 90) % 360;
+
+            //Flip if needed to animate correctly
+            gameObject.GetComponent<SpriteRenderer>().flipX = (angle > 180) ? true : false;
+            //Set the animator parameters
+            if (angle > 180)
+            {
+                angle = 360 - angle;
+            }
+
             animator.SetBool("IsDashing", false);
             animator.SetFloat("Angle", angle);
             animator.SetBool("Moving", (dir.x != 0 || dir.y != 0));
@@ -214,7 +216,9 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Dash(Vector2 direction)
     {
         isDashing = true;
-        animator.SetBool("IsDashing", true);
+        //Animate the dash
+        AnimateDash(direction);
+        
         canDash = false;
         direction.Normalize();
         dashDistanceLeft = CanDashInDirection(direction);
@@ -234,5 +238,24 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+    }
+
+    private void AnimateDash(Vector2 direction)
+    {
+        animator.SetBool("IsDashing", true);
+        //Look for what angle is the dash
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        angle = (angle + 360 + 90) % 360;
+        if (angle > 180)
+        {
+            //Flip if needed to animate correctly
+            gameObject.GetComponent<SpriteRenderer>().flipX = true;
+            angle = 360 - angle;
+        }
+        //Set the animator parameters
+        animator.SetFloat("Angle", angle);
+
+        //Set the weapon to not visible
+        gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = false;
     }
 }
