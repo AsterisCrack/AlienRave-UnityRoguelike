@@ -58,6 +58,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "GunChangeUp",
+                    "type": "Value",
+                    "id": "68a91b0c-1e69-46d8-aaf3-f894f5251fdd",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "GunChangeDown",
+                    "type": "Value",
+                    "id": "6d5c04fa-8f09-4a10-9dfd-1aa01dc5f444",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -225,6 +243,28 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "cc7743b2-dcf1-4147-ac4f-812e2d00267a",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GunChangeUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7feb387e-d792-4b7c-bea1-041726a83d7c",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GunChangeDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

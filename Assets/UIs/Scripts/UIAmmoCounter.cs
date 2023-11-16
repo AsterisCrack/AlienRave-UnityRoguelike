@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIAmmoCounter : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI ammoCounter;
-    [SerializeField] private TextMeshProUGUI clipcounter;
+    [SerializeField] private Text ammoCounter;
+    [SerializeField] private Text clipcounter;
     public static UIAmmoCounter instance;
     private void Awake()
     {

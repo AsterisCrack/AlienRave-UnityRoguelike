@@ -80,6 +80,24 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GunChangeUp"",
+                    ""type"": ""Value"",
+                    ""id"": ""68a91b0c-1e69-46d8-aaf3-f894f5251fdd"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GunChangeDown"",
+                    ""type"": ""Value"",
+                    ""id"": ""6d5c04fa-8f09-4a10-9dfd-1aa01dc5f444"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -247,6 +265,28 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc7743b2-dcf1-4147-ac4f-812e2d00267a"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GunChangeUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7feb387e-d792-4b7c-bea1-041726a83d7c"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GunChangeDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -261,6 +301,8 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_Gameplay_Aim = m_Gameplay.FindAction("Aim", throwIfNotFound: true);
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
+        m_Gameplay_GunChangeUp = m_Gameplay.FindAction("GunChangeUp", throwIfNotFound: true);
+        m_Gameplay_GunChangeDown = m_Gameplay.FindAction("GunChangeDown", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -328,6 +370,8 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Aim;
     private readonly InputAction m_Gameplay_Interact;
     private readonly InputAction m_Gameplay_Dash;
+    private readonly InputAction m_Gameplay_GunChangeUp;
+    private readonly InputAction m_Gameplay_GunChangeDown;
     public struct GameplayActions
     {
         private @Inputs m_Wrapper;
@@ -338,6 +382,8 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         public InputAction @Aim => m_Wrapper.m_Gameplay_Aim;
         public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
+        public InputAction @GunChangeUp => m_Wrapper.m_Gameplay_GunChangeUp;
+        public InputAction @GunChangeDown => m_Wrapper.m_Gameplay_GunChangeDown;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -365,6 +411,12 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @GunChangeUp.started += instance.OnGunChangeUp;
+            @GunChangeUp.performed += instance.OnGunChangeUp;
+            @GunChangeUp.canceled += instance.OnGunChangeUp;
+            @GunChangeDown.started += instance.OnGunChangeDown;
+            @GunChangeDown.performed += instance.OnGunChangeDown;
+            @GunChangeDown.canceled += instance.OnGunChangeDown;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -387,6 +439,12 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @GunChangeUp.started -= instance.OnGunChangeUp;
+            @GunChangeUp.performed -= instance.OnGunChangeUp;
+            @GunChangeUp.canceled -= instance.OnGunChangeUp;
+            @GunChangeDown.started -= instance.OnGunChangeDown;
+            @GunChangeDown.performed -= instance.OnGunChangeDown;
+            @GunChangeDown.canceled -= instance.OnGunChangeDown;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -412,5 +470,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         void OnAim(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnGunChangeUp(InputAction.CallbackContext context);
+        void OnGunChangeDown(InputAction.CallbackContext context);
     }
 }
