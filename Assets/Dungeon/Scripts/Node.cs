@@ -13,6 +13,7 @@ public class Node
     public float y;
 
     public Vector3 Position { get { return new Vector3(x, y, 0); } }
+    public Room room;
 
     public enum roomType { normal, start, boss, shop, treasure };
     public roomType type;
@@ -28,7 +29,7 @@ public class Node
     public int depth;
 
     //Initialise the node
-    public Node(int id, int x, int y, int roomWidth=0, int roomHeight=0, roomType type=roomType.normal)
+    public Node(int id, int x, int y, Room room, int roomWidth=0, int roomHeight=0, roomType type=roomType.normal)
     {
         this.id = id;
         this.x = x;
@@ -45,6 +46,7 @@ public class Node
         depth = 0;
         //Set the type of the room
         this.type = type;
+        this.room = room;
     }
 
     public void AddNeighbour(Node node)

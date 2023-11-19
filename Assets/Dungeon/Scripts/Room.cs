@@ -49,12 +49,11 @@ public class Room
     public void GenerateRoom()
     {
         room = isSquare ? GenerateRoomSquare() : GenerateRoomRandom();
-        (wallsTop, wallsBottom, wallsLeft, wallsRight) = GenerateRoomWalls(room);
     }
 
-    public (bool[,], bool[,], bool[,], bool[,], bool[,]) GetRoomMatrix()
+    public bool[,] GetRoomMatrix()
     {
-        return (room, wallsTop, wallsBottom, wallsLeft, wallsRight);
+        return room;
     }
 
     //This function will return a matrix with the room shape if the room is square
@@ -139,56 +138,13 @@ public class Room
         //Walls have a height of 2 on top and 1 the rest of sides
         //The walls will be generated based on the room shape
 
-        int height = room.GetLength(1) + 4;
-        int width = room.GetLength(0) + 4;
-        bool[,] wallsTop = new bool[width, height];
-        bool[,] wallsBottom = new bool[width, height];
-        bool[,] wallsLeft = new bool[width, height];
-        bool[,] wallsRight = new bool[width, height];
-
         //lets try to do it with a morphological operation (dilation)
         //We need a padding of 2 for the 5x5 kernel
+
         bool[,] roomToDilate = matrixDilation.Padding(room, 2);
 
-        //Set the walls to false
-        for (int i = 0; i < wallsTop.GetLength(0); i++)
-        {
-            for (int j = 0; j < wallsTop.GetLength(1); j++)
-            {
-                wallsTop[i, j] = false;
-                wallsBottom[i, j] = false;
-                wallsLeft[i, j] = false;
-                wallsRight[i, j] = false;
-            }
-        }
-
-        //Now, we will apply the kernel and obteain the walls
-        //We will use a 3x3 kernel for most of the walls, but the top wall will be a 5x5 kernel
-        bool[,] bottomKernel = new bool[3, 3] { { true, true, true },
-                                                { false, true, false },
-                                                { false, false, false } };
-
-        bool[,] topKernel = new bool[5, 5] {    { false, false, false, false, false },
-                                                { false, false, false, false, false },
-                                                { false, false, true, false, false },
-                                                { false, true, true, true, false },
-                                                { false, true, true, true, false } };
-
-        bool[,] leftKernel = new bool[3, 3] {   { false, false, false },
-                                                { false, true, true },
-                                                { false, false, false } };
-
-        bool[,] rightKernel = new bool[3, 3] {  { false, false, false },
-                                                { true, true, false },
-                                                { false, false, false } };
-
-        wallsBottom = matrixDilation.DilateOnlyFrontier(roomToDilate, bottomKernel);
-        wallsTop = matrixDilation.DilateOnlyFrontier(roomToDilate, topKernel);
-        wallsLeft = matrixDilation.DilateOnlyFrontier(roomToDilate, leftKernel);
-        wallsRight = matrixDilation.DilateOnlyFrontier(roomToDilate, rightKernel);
-
         //return the walls
-        return (wallsTop, wallsBottom, wallsLeft, wallsRight);
+        return matrixDilation.GetWallDilations(roomToDilate);
     }
 
     private void PaintRoom(bool[,] room, Tilemap tilemap, RuleTile ruletile, int startingPosX = 0, int startingPosY = 0)
@@ -205,8 +161,8 @@ public class Room
         {
             for (int j = 0; j < room.GetLength(1); j++)
             {
-                //If the position is true, we will paint it
-                if (room[i, j])
+                //If the position is true and the tile in the tilemap is empty, we will paint it
+                if (room[i, j] && tilemap.GetTile(new Vector3Int(startingPosX + i, startingPosY + j, 0)) == null)
                 {
                     //We will create a new vector3Int with the position
                     Vector3Int position = new Vector3Int(startingPosX + i, startingPosY + j, 0);
@@ -215,5 +171,17 @@ public class Room
                 }
             }
         }
+    }
+
+    public void PaintWholeRoom(Tilemap groundMap, Tilemap CollidableMap, RuleTile groundRuletile, RuleTile leftRuletile, RuleTile rightRuletile, RuleTile topRuletile, RuleTile bottomRuletile, int startingPosX = 0, int startingPosY = 0)
+    {
+        (wallsTop, wallsBottom, wallsLeft, wallsRight) = GenerateRoomWalls(room);
+        //Paint the room
+        PaintRoom(room, groundMap, groundRuletile, startingPosX, startingPosY);
+        //Paint the walls
+        PaintRoom(wallsTop, CollidableMap, topRuletile, startingPosX, startingPosY);
+        PaintRoom(wallsBottom, CollidableMap, bottomRuletile, startingPosX, startingPosY);
+        PaintRoom(wallsLeft, CollidableMap, leftRuletile, startingPosX, startingPosY);
+        PaintRoom(wallsRight, CollidableMap, rightRuletile, startingPosX, startingPosY);
     }
 }
