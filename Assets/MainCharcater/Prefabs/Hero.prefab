@@ -84,6 +84,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6182684418139008905, guid: 95d2267a6389ec54e8a92efa275f7527, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6930254007527638284}
+    - targetCorrespondingSourceObject: {fileID: 6182684418139008905, guid: 95d2267a6389ec54e8a92efa275f7527, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6802265003343225371}
   m_SourcePrefab: {fileID: 100100000, guid: 95d2267a6389ec54e8a92efa275f7527, type: 3}
 --- !u!95 &1086980136301227134 stripped
 Animator:
@@ -162,7 +165,18 @@ MonoBehaviour:
   guns:
   - {fileID: 4885391829508610783}
   currentGun: 0
-  gunUIShowcase: {fileID: 0}
+--- !u!114 &6802265003343225371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5441201665043479793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: debaee6347f56214a833df381fe57434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4387361261084829152
 PrefabInstance:
   m_ObjectHideFlags: 0

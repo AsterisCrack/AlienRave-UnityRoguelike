@@ -61,17 +61,26 @@ public class EnemyFactory : MonoBehaviour // va a colgar de un GameObject vacío 
         WeaponData weaponData = weaponFactory.CreateWeaponDataObject(level, type);
         AttackPattern attackPattern = attackPatternFactory.GenerateAttackPattern(level, type);
 
+
+        /*
+         * ERROR: The type 'Enemy' cannot be used as type parameter 'T' in the generic type or method 'GameObject.AddComponent<T>()'. 
+         * There is no implicit reference conversion from 'Enemy' to 'UnityEngine.Component'.
+         * 
+         * SOLUCION: https://answers.unity.com/questions/1410701/the-type-cannot-be-used-as-type-parameter-t-in-the.html
+         */
+        
         
         GameObject enemy = new GameObject();
         enemy.AddComponent<Enemy>();
         enemy.GetComponent<Enemy>().enemyData = enemyData;
         enemy.GetComponent<Enemy>().weaponData = weaponData;
         enemy.GetComponent<Enemy>().enemyPatternData = attackPattern;
+
         return enemy;
     }
 }
 
-public class Enemy
+public class Enemy : MonoBehaviour
 {
     public EnemyData enemyData;
     public WeaponData weaponData;
