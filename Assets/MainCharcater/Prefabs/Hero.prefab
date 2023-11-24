@@ -162,7 +162,6 @@ MonoBehaviour:
   guns:
   - {fileID: 4885391829508610783}
   currentGun: 0
-  gunUIShowcase: {fileID: 0}
 --- !u!1001 &4387361261084829152
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -226,6 +225,10 @@ PrefabInstance:
     - target: {fileID: 4020900333819750464, guid: 6be42f1096f0a524ea9135209e9b8f85, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5152352149377759682, guid: 6be42f1096f0a524ea9135209e9b8f85, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5645582231275218323, guid: 6be42f1096f0a524ea9135209e9b8f85, type: 3}
       propertyPath: m_SortingOrder

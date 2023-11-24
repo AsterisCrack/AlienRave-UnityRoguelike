@@ -73,6 +73,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""DropGun"",
+                    ""type"": ""Button"",
+                    ""id"": ""027f9168-2b5c-4fbe-818d-0dfc0a26a8ae"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""4400a425-0aef-4ad6-9208-4c701d4a4009"",
@@ -287,6 +296,17 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""action"": ""GunChangeDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fbecad55-a5f8-4182-8c0b-52a18fb3a47a"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropGun"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -300,6 +320,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_Gameplay_Shoot = m_Gameplay.FindAction("Shoot", throwIfNotFound: true);
         m_Gameplay_Aim = m_Gameplay.FindAction("Aim", throwIfNotFound: true);
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
+        m_Gameplay_DropGun = m_Gameplay.FindAction("DropGun", throwIfNotFound: true);
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         m_Gameplay_GunChangeUp = m_Gameplay.FindAction("GunChangeUp", throwIfNotFound: true);
         m_Gameplay_GunChangeDown = m_Gameplay.FindAction("GunChangeDown", throwIfNotFound: true);
@@ -369,6 +390,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Shoot;
     private readonly InputAction m_Gameplay_Aim;
     private readonly InputAction m_Gameplay_Interact;
+    private readonly InputAction m_Gameplay_DropGun;
     private readonly InputAction m_Gameplay_Dash;
     private readonly InputAction m_Gameplay_GunChangeUp;
     private readonly InputAction m_Gameplay_GunChangeDown;
@@ -381,6 +403,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_Gameplay_Shoot;
         public InputAction @Aim => m_Wrapper.m_Gameplay_Aim;
         public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
+        public InputAction @DropGun => m_Wrapper.m_Gameplay_DropGun;
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputAction @GunChangeUp => m_Wrapper.m_Gameplay_GunChangeUp;
         public InputAction @GunChangeDown => m_Wrapper.m_Gameplay_GunChangeDown;
@@ -408,6 +431,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @DropGun.started += instance.OnDropGun;
+            @DropGun.performed += instance.OnDropGun;
+            @DropGun.canceled += instance.OnDropGun;
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
@@ -436,6 +462,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @DropGun.started -= instance.OnDropGun;
+            @DropGun.performed -= instance.OnDropGun;
+            @DropGun.canceled -= instance.OnDropGun;
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
@@ -469,6 +498,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnDropGun(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnGunChangeUp(InputAction.CallbackContext context);
         void OnGunChangeDown(InputAction.CallbackContext context);

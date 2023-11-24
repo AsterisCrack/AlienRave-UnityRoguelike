@@ -25,8 +25,8 @@ public class BurstShoot : MonoBehaviour
     {
         emmiterSettings = GetComponent<AdvancedBulletEmmiter>();
         isReloading = false;
-        currentAmmo = emmiterSettings.TotalAmmo;
-        currentClip = emmiterSettings.ClipSize;
+        currentAmmo = emmiterSettings.CurrentAmmo;
+        currentClip = emmiterSettings.CurrentClip;
         burstCount = emmiterSettings.BurstCount;
         burstDelay = emmiterSettings.BurstDelay;
         canShoot = true;

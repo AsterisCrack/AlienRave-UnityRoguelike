@@ -12,7 +12,13 @@ public class GunMovement : MonoBehaviour
     Vector3 startingPosition;
     private PlayerInput playerInput;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
+    {
+        playerInput = GetComponentInParent<PlayerInput>();
+        startingPosition = transform.localPosition;
+    }
+
+    private void OnEnable()
     {
         playerInput = GetComponentInParent<PlayerInput>();
         startingPosition = transform.localPosition;

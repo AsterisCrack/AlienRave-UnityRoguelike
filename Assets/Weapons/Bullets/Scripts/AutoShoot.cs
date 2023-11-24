@@ -25,8 +25,8 @@ public class AutoShoot : MonoBehaviour
         emmiterSettings = GetComponent<AdvancedBulletEmmiter>();
         cooldownTimer = 0;
         isReloading = false;
-        currentAmmo = emmiterSettings.TotalAmmo;
-        currentClip = emmiterSettings.ClipSize;
+        currentAmmo = emmiterSettings.CurrentAmmo;
+        currentClip = emmiterSettings.CurrentClip;
         canShoot = true;
         reloadTime = emmiterSettings.ReloadTime;
         shootAction = emmiterSettings.ShootAction;
