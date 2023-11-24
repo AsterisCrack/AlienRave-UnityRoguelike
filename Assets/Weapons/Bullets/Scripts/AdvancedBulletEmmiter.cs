@@ -42,8 +42,8 @@ public class AdvancedBulletEmmiter : MonoBehaviour
     public int TotalAmmo { get => totalAmmo; set => totalAmmo = value; }
     public int ClipSize { get => clipSize; set => clipSize = value; }
 
-    private int currentAmmo;
-    private int currentClip;
+    private int currentAmmo = -1;
+    private int currentClip = -1;
     public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
     public int CurrentClip { get => currentClip; set => currentClip = value; }
 
@@ -67,24 +67,68 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         reloadAction = playerInput.actions["Reload"];
     }
 
+    private void SetShootScriptActive(bool active)
+    {
+        if (active)
+        {   
+            switch (weaponType)
+            {
+                case WeaponType.Automatic:
+                    gameObject.AddComponent<AutoShoot>();
+                    break;
+                case WeaponType.SemiAutomatic:
+                    gameObject.AddComponent<SemiAutoShoot>();
+                    break;
+                case WeaponType.Burst:
+                    gameObject.AddComponent<BurstShoot>();
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            //If it has no shooting script, exit the function
+            if (!gameObject.GetComponent<AutoShoot>() && !gameObject.GetComponent<SemiAutoShoot>() && !gameObject.GetComponent<BurstShoot>())
+            {
+                return;
+            }
+            switch (weaponType)
+            {
+                case WeaponType.Automatic:
+                    Destroy(gameObject.GetComponent<AutoShoot>());
+                    break;
+                case WeaponType.SemiAutomatic:
+                    Destroy(gameObject.GetComponent<SemiAutoShoot>());
+                    break;
+                case WeaponType.Burst:
+                    Destroy(gameObject.GetComponent<BurstShoot>());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        SetShootScriptActive(true);
+        ammoCounter = UIAmmoCounter.instance;
+        if (currentAmmo == -1) currentAmmo = totalAmmo;
+        if (currentClip == -1) currentClip = clipSize;
+        ammoCounter.SetAmmoCounter(currentAmmo);
+        ammoCounter.SetClipCounter(currentClip);
+    }
+
+    private void OnDisable()
+    {
+           SetShootScriptActive(false);
+    }
+
     //At start, attach the appropiate shooting script
     void Start()
     {
         system = GetComponent<ParticleSystem>();
-        switch (weaponType)
-        {
-            case WeaponType.Automatic:
-                gameObject.AddComponent<AutoShoot>();
-                break;
-            case WeaponType.SemiAutomatic:
-                gameObject.AddComponent<SemiAutoShoot>();
-                break;
-            case WeaponType.Burst:
-                gameObject.AddComponent<BurstShoot>();
-                break;
-            default:
-                break;
-        }
         //Set the ammo counters
         currentAmmo = totalAmmo;
         currentClip = clipSize;

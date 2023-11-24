@@ -184,6 +184,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BulletEmmiter
       objectReference: {fileID: 0}
+    - target: {fileID: 5088750987935703421, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
+      propertyPath: m_TagString
+      value: BulletEmitter
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

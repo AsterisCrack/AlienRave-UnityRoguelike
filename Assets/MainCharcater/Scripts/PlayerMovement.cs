@@ -119,8 +119,12 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         if (!dashingAnimNames.Contains(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name) || animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
         {
-            //Set weapon to visible
-            gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = true;
+            //Check if it has children
+            if (gameObject.GetComponentsInChildren<SpriteRenderer>().Length != 0)
+            {
+                //Set weapon to visible
+                gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = true;
+            }
 
             //Set the animator parameters to correct animation
             //Only 2 variables are needed, the rest of the logic is handled in the animator
@@ -255,7 +259,11 @@ public class PlayerMovement : MonoBehaviour
         //Set the animator parameters
         animator.SetFloat("Angle", angle);
 
-        //Set the weapon to not visible
-        gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = false;
+        //Check if it has children
+        if (gameObject.GetComponentsInChildren<SpriteRenderer>().Length != 0)
+        {
+            //Set weapon to visible
+            gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = false;
+        }
     }
 }
