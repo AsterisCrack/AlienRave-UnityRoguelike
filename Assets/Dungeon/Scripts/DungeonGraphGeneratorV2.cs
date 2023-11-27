@@ -70,6 +70,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     private int matrixDisplacementX;
     private int matrixDisplacementY;
 
+    private SetAstarGraph setAstarGraph;
+
     private void AddRoomToMatrix(float x, float y, int roomWidth, int roomHeight, Room room)
     {
         //First we need to create a bigger matrix to store the room
@@ -253,6 +255,10 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             stopwatch.Stop();
             Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
         }
+
+        //Set the Astar graph
+        setAstarGraph= GetComponent<SetAstarGraph>();
+        setAstarGraph.SetGraph(roomMatrix.GetLength(0), roomMatrix.GetLength(1), matrixDisplacementX + (float)roomMatrix.GetLength(0)/ 2f + 0.5f, matrixDisplacementY + (float)roomMatrix.GetLength(1)/2f);
     }
 
     //First generate the nodes randomly

@@ -55,16 +55,6 @@ public class EnemyDataFactory : MonoBehaviour // va a colgar de un GameObject va
                 accuracy = 0.9f;
                 break;
 
-            case EnemyFactory.enemyType.tank:
-                // caso tank
-                maxHealth = 200;
-                currentHealth = 200;
-                speed = 2;
-                attackSpeed = 1;
-                attackRange = 1;
-                accuracy = 0.9f;
-                break;
-
             case EnemyFactory.enemyType.boss:
                 // caso boss
                 maxHealth = 1000;

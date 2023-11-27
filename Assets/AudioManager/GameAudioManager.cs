@@ -29,7 +29,6 @@ public class GameAudioManager : MonoBehaviour
         // Ensure we have at least one audio clip
         if (audioClips.Length == 0)
         {
-            Debug.LogError("No audio clips assigned.");
             return;
         }
 
