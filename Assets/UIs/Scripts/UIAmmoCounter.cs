@@ -13,6 +13,7 @@ public class UIAmmoCounter : MonoBehaviour
     {
         instance = this;
     }
+
     public void SetAmmoCounter(int ammo)
     {
         ammoCounter.text = "Ammo: " + ammo.ToString();

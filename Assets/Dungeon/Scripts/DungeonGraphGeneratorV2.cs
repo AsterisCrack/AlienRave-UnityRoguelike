@@ -16,6 +16,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     [Header("Editor settings")]
     //Button to generate the graph
     [SerializeField] private bool generateGraph;
+    [SerializeField] private bool verbose = false;
     [SerializeField] private bool drawTilemap;
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private Tilemap wallTilemap;
@@ -220,31 +221,31 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         stopwatch.Start();
         nodes = GenerateNodes();
         stopwatch.Stop();
-        Debug.Log("Nodes generated in: " + stopwatch.ElapsedMilliseconds + " ms");
+        if (verbose) Debug.Log("Nodes generated in: " + stopwatch.ElapsedMilliseconds + " ms");
 
         //Generate the edges
         stopwatch.Reset();
         stopwatch.Start();
         edges = GenerateEdges();
         stopwatch.Stop();
-        Debug.Log("Edges generated in: " + stopwatch.ElapsedMilliseconds + " ms");
+        if (verbose) Debug.Log("Edges generated in: " + stopwatch.ElapsedMilliseconds + " ms");
 
         //Generate the hallways
         stopwatch.Reset();
         stopwatch.Start();
         GenerateHallways();
         stopwatch.Stop();
-        Debug.Log("Hallways generated in: " + stopwatch.ElapsedMilliseconds + " ms");
+        if (verbose) Debug.Log("Hallways generated in: " + stopwatch.ElapsedMilliseconds + " ms");
 
         //Get room depths
         stopwatch.Reset();
         stopwatch.Start();
         GetRoomDepths();
         stopwatch.Stop();
-        Debug.Log("Room depths calculated in: " + stopwatch.ElapsedMilliseconds + " ms");
+        if (verbose) Debug.Log("Room depths calculated in: " + stopwatch.ElapsedMilliseconds + " ms");
 
         //Print number of nodes and edges and the number of nodes in the force graph
-        Debug.Log("Nodes: " + nodes.Count + " Edges: " + edges.Count);
+        if (verbose) Debug.Log("Nodes: " + nodes.Count + " Edges: " + edges.Count);
 
         if (drawTilemap)
         {
@@ -253,7 +254,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             stopwatch.Start();
             DrawTilemap();
             stopwatch.Stop();
-            Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
+            if (verbose) Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
         }
 
         //Set the Astar graph
@@ -1025,7 +1026,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         }
         else
         {
-            Debug.Log("Failed to generate the graph. Retrying...");
+            if (verbose) Debug.Log("Failed to generate the graph. Retrying...");
 
             InitialiseGraph();
         }
