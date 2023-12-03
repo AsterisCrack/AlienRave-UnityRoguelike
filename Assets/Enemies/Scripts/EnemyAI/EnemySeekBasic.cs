@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class EnemySeekBasic : MonoBehaviour
+public class EnemySeekBasic : PlayerLocator
 {
     [SerializeField] private Transform target;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float nextWaypointDistance = 3f;
+    [SerializeField] private float stoppingDistance = 4f;
+    [SerializeField] private float threasholdStoppingDistance = 2f;
+    private bool isStopped = false;
 
     [SerializeField] private bool lookAtPlayer = true;
 
@@ -23,6 +26,7 @@ public class EnemySeekBasic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        FindPlayer();
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
@@ -73,8 +77,24 @@ public class EnemySeekBasic : MonoBehaviour
             reachedEndOfPath = false;
         }
 
-        Move();
-        CheckDistance();
+        if (!isStopped) 
+        {
+            Move();
+            CheckDistance();
+            //Debug.Log(GetDistanceToPlayer() + " " + IsPlayerInSight());
+            if (GetDistanceToPlayer() <= stoppingDistance && IsPlayerInSight())
+            {
+                isStopped = true;
+            }
+        }
+        else
+        {
+            Animate(player.transform.position - transform.position);
+            if (GetDistanceToPlayer() > stoppingDistance + threasholdStoppingDistance || !IsPlayerInSight())
+            {
+                isStopped = false;
+            }
+        }
     }
 
     private void CheckDistance()

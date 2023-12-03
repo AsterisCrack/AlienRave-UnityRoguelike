@@ -21,10 +21,11 @@ public class PlayerLocator : MonoBehaviour
     public bool IsPlayerInSight()
     {
         //Check if player is in sight
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position - transform.position, Mathf.Infinity);
+        float distanceToPlayer = GetDistanceToPlayer();
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position - transform.position, Mathf.Infinity, LayerMask.GetMask("CollidableWall"));
         if (hit.collider != null)
         {
-            if (hit.collider.gameObject.tag == "Character")
+            if (distanceToPlayer < hit.distance)
             {
                 return true;
             }
