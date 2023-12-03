@@ -5,42 +5,22 @@ using UnityEngine.InputSystem;
 
 public class AdvancedBulletEmmiter : MonoBehaviour
 {
-    [Header("Weapon Type")]
-    [SerializeField] ParticleSystem system;
-    //ennumerator on weapon type: automatic, semi-automatic, burst, etc.
-    private enum WeaponType { Automatic, SemiAutomatic, Burst };
-    [SerializeField] private WeaponType weaponType;
-
-    [Header("Characteristics")]
-    [SerializeField] private float reloadTime;
-    [SerializeField] private float fireRate;
-    [SerializeField] private float damage;
-    [SerializeField] private float range;
-    [SerializeField] private float accuracy;
-    [SerializeField] private int burstCount;
-    [SerializeField] private float burstDelay;
-    [SerializeField] private float shakeTime;
-    [SerializeField] private float shakeMagnitude;
-
-    [SerializeField] private AdvancedBulletEmmiter bulletEmitter;
-
-
-    public float ReloadTime { get => reloadTime; set => reloadTime = value; }
-    public float FireRate { get => fireRate; set => fireRate = value; }
-    public float Damage { get => damage; set => damage = value; }
-    public float Range { get => range; set => range = value; }
-    public float Accuracy { get => accuracy; set => accuracy = value; }
-    public int BurstCount { get => burstCount; set => burstCount = value; }
-    public float BurstDelay { get => burstDelay; set => burstDelay = value; }
-    public float ShakeTime { get => shakeTime; set => shakeTime = value; }
-    public float ShakeMagnitude { get => shakeMagnitude; set => shakeMagnitude = value; }
-
-
-    [Header("Ammo")]
-    [SerializeField] private int totalAmmo;
-    [SerializeField] private int clipSize;
-    public int TotalAmmo { get => totalAmmo; set => totalAmmo = value; }
-    public int ClipSize { get => clipSize; set => clipSize = value; }
+    [Header("Weapon Stats")]
+    [SerializeField] WeaponStats weaponStats;
+    
+    private WeaponStats.WeaponType weaponType;
+    private ParticleSystem system;
+    private float reloadTime; public float ReloadTime { get => reloadTime; set => reloadTime = value; }
+    private float fireRate; public float FireRate { get => fireRate; set => fireRate = value; }
+    private float damage; public float Damage { get => damage; set => damage = value; }
+    private float range; public float Range { get => range; set => range = value; }
+    private float accuracy; public float Accuracy { get => accuracy; set => accuracy = value; }
+    private int burstCount; public int BurstCount { get => burstCount; set => burstCount = value; }
+    private float burstDelay; public float BurstDelay { get => burstDelay; set => burstDelay = value; }
+    private float shakeTime; public float ShakeTime { get => shakeTime; set => shakeTime = value; }
+    private float shakeMagnitude; public float ShakeMagnitude { get => shakeMagnitude; set => shakeMagnitude = value; }
+    private int totalAmmo; public int TotalAmmo { get => totalAmmo; set => totalAmmo = value; }
+    private int clipSize; public int ClipSize { get => clipSize; set => clipSize = value; }
 
     private int currentAmmo = -1;
     private int currentClip = -1;
@@ -62,6 +42,26 @@ public class AdvancedBulletEmmiter : MonoBehaviour
 
     private void Awake()
     {
+        //If no weapon stats are set, set the Script in this object
+        if (!weaponStats)
+        {
+            weaponStats = GetComponent<WeaponStats>();
+        }
+        //Set the weapon stats
+        system = weaponStats.system;
+        weaponType = weaponStats.weaponType;
+        reloadTime = weaponStats.reloadTime;
+        fireRate = weaponStats.fireRate;
+        damage = weaponStats.damage;
+        range = weaponStats.range;
+        accuracy = weaponStats.accuracy;
+        burstCount = weaponStats.burstCount;
+        burstDelay = weaponStats.burstDelay;
+        shakeTime = weaponStats.shakeTime;
+        shakeMagnitude = weaponStats.shakeMagnitude;
+        totalAmmo = weaponStats.totalAmmo;
+        clipSize = weaponStats.clipSize;
+
         playerInput = GetComponent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
         reloadAction = playerInput.actions["Reload"];
@@ -73,13 +73,13 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         {   
             switch (weaponType)
             {
-                case WeaponType.Automatic:
+                case WeaponStats.WeaponType.Automatic:
                     gameObject.AddComponent<AutoShoot>();
                     break;
-                case WeaponType.SemiAutomatic:
+                case WeaponStats.WeaponType.SemiAutomatic:
                     gameObject.AddComponent<SemiAutoShoot>();
                     break;
-                case WeaponType.Burst:
+                case WeaponStats.WeaponType.Burst:
                     gameObject.AddComponent<BurstShoot>();
                     break;
                 default:
@@ -95,13 +95,13 @@ public class AdvancedBulletEmmiter : MonoBehaviour
             }
             switch (weaponType)
             {
-                case WeaponType.Automatic:
+                case WeaponStats.WeaponType.Automatic:
                     Destroy(gameObject.GetComponent<AutoShoot>());
                     break;
-                case WeaponType.SemiAutomatic:
+                case WeaponStats.WeaponType.SemiAutomatic:
                     Destroy(gameObject.GetComponent<SemiAutoShoot>());
                     break;
-                case WeaponType.Burst:
+                case WeaponStats.WeaponType.Burst:
                     Destroy(gameObject.GetComponent<BurstShoot>());
                     break;
                 default:

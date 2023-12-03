@@ -3,166 +3,125 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EnemyShoot : MonoBehaviour
+public class EnemyShoot : PlayerLocator
 {
-    [Header("Weapon Type")]
-    [SerializeField] ParticleSystem system;
-    //ennumerator on weapon type: automatic, semi-automatic, burst, etc.
-    private enum WeaponType { Automatic, SemiAutomatic, Burst };
-    [SerializeField] private WeaponType weaponType;
+    //Needed variables
+    [Header("Weapon Stats")]
+    [SerializeField] WeaponStats weaponStats;
 
-    [Header("Characteristics")]
-    [SerializeField] private float reloadTime;
-    [SerializeField] private float fireRate;
-    [SerializeField] private float damage;
-    [SerializeField] private float range;
-    [SerializeField] private float accuracy;
-    [SerializeField] private int burstCount;
-    [SerializeField] private float burstDelay;
-    [SerializeField] private float shakeTime;
-    [SerializeField] private float shakeMagnitude;
+    [Header("Enemy options")]
+    [SerializeField] float minshootDistance = 10f;
 
-    [SerializeField] private AdvancedBulletEmmiter bulletEmitter;
-
-
-    public float ReloadTime { get => reloadTime; set => reloadTime = value; }
-    public float FireRate { get => fireRate; set => fireRate = value; }
-    public float Damage { get => damage; set => damage = value; }
-    public float Range { get => range; set => range = value; }
-    public float Accuracy { get => accuracy; set => accuracy = value; }
-    public int BurstCount { get => burstCount; set => burstCount = value; }
-    public float BurstDelay { get => burstDelay; set => burstDelay = value; }
-    public float ShakeTime { get => shakeTime; set => shakeTime = value; }
-    public float ShakeMagnitude { get => shakeMagnitude; set => shakeMagnitude = value; }
-
-
-    [Header("Ammo")]
-    [SerializeField] private int totalAmmo;
-    [SerializeField] private int clipSize;
-    public int TotalAmmo { get => totalAmmo; set => totalAmmo = value; }
-    public int ClipSize { get => clipSize; set => clipSize = value; }
+    private WeaponStats.WeaponType weaponType;
+    private ParticleSystem system;
+    private float reloadTime;
+    private float fireRate;
+    private float damage;
+    private float range;
+    private float accuracy;
+    private int burstCount;
+    private float burstDelay;
+    private float shakeTime; 
+    private float shakeMagnitude;
+    //Enemies have infinite ammo
+    private int clipSize;
 
     private int currentAmmo = -1;
     private int currentClip = -1;
-    public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
-    public int CurrentClip { get => currentClip; set => currentClip = value; }
 
-    //Instances of objects needed
-    //Ammo counter UI
-    private UIAmmoCounter ammoCounter;
     //Camera shake
     private CameraShake cameraShake;
 
-    //Inputs
-    private PlayerInput playerInput;
-    private InputAction shootAction;
-    private InputAction reloadAction;
-    public InputAction ShootAction { get => shootAction; set => shootAction = value; }
-    public InputAction ReloadAction { get => reloadAction; set => reloadAction = value; }
+    //Neccessary variables
+    private float cooldownTimer;
 
-    private void Awake()
+    // Start is called before the first frame update
+    void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
-        shootAction = playerInput.actions["Shoot"];
-        reloadAction = playerInput.actions["Reload"];
+        FindPlayer();
+        //If no weapon stats are set, set the Script in this object
+        if (!weaponStats)
+        {
+            weaponStats = GetComponent<WeaponStats>();
+        }
+        //Set the weapon stats
+        system = weaponStats.system;
+        weaponType = weaponStats.weaponType;
+        reloadTime = weaponStats.reloadTime;
+        fireRate = weaponStats.fireRate;
+        damage = weaponStats.damage;
+        range = weaponStats.range;
+        accuracy = weaponStats.accuracy;
+        burstCount = weaponStats.burstCount;
+        burstDelay = weaponStats.burstDelay;
+        shakeTime = weaponStats.shakeTime;
+        shakeMagnitude = weaponStats.shakeMagnitude;
+        clipSize = weaponStats.clipSize;
     }
-
-    private void SetShootScriptActive(bool active)
+    void Start()
     {
-        if (active)
-        {
-            switch (weaponType)
-            {
-                case WeaponType.Automatic:
-                    gameObject.AddComponent<AutoShoot>();
-                    break;
-                case WeaponType.SemiAutomatic:
-                    gameObject.AddComponent<SemiAutoShoot>();
-                    break;
-                case WeaponType.Burst:
-                    gameObject.AddComponent<BurstShoot>();
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            //If it has no shooting script, exit the function
-            if (!gameObject.GetComponent<AutoShoot>() && !gameObject.GetComponent<SemiAutoShoot>() && !gameObject.GetComponent<BurstShoot>())
-            {
-                return;
-            }
-            switch (weaponType)
-            {
-                case WeaponType.Automatic:
-                    Destroy(gameObject.GetComponent<AutoShoot>());
-                    break;
-                case WeaponType.SemiAutomatic:
-                    Destroy(gameObject.GetComponent<SemiAutoShoot>());
-                    break;
-                case WeaponType.Burst:
-                    Destroy(gameObject.GetComponent<BurstShoot>());
-                    break;
-                default:
-                    break;
-            }
-        }
+        cooldownTimer = 0;
+        system = GetComponent<ParticleSystem>();
+        //Set the ammo counters
+        currentClip = clipSize;
+
+        //Object initialization
+        cameraShake = CameraShake.instance;
     }
 
     private void OnEnable()
     {
-        SetShootScriptActive(true);
-        ammoCounter = UIAmmoCounter.instance;
-        if (currentAmmo == -1) currentAmmo = totalAmmo;
-        if (currentClip == -1) currentClip = clipSize;
-        ammoCounter.SetAmmoCounter(currentAmmo);
-        ammoCounter.SetClipCounter(currentClip);
-    }
-
-    private void OnDisable()
-    {
-        SetShootScriptActive(false);
-    }
-
-    //At start, attach the appropiate shooting script
-    void Start()
-    {
-        system = GetComponent<ParticleSystem>();
-        //Set the ammo counters
-        currentAmmo = totalAmmo;
         currentClip = clipSize;
-
-        //Object initialization
-        ammoCounter = UIAmmoCounter.instance;
-        ammoCounter.SetAmmoCounter(totalAmmo);
-        ammoCounter.SetClipCounter(clipSize);
-        cameraShake = CameraShake.instance;
     }
 
     public void Shoot()
     {
+        cooldownTimer = fireRate;
         //Update ammo counters
         currentAmmo--;
         currentClip--;
-        ammoCounter.SetAmmoCounter(currentAmmo);
-        ammoCounter.SetClipCounter(currentClip);
         //Play the particle system
         system.Play();
         //Shake the camera
         cameraShake.ShakeCamera(shakeTime, shakeMagnitude);
+        if (currentClip <= 0)
+        {
+            //Reload if the clip is empty
+            StartCoroutine(Reload());
+        }
     }
-
-    public void StartReload()
+    private IEnumerator Reload()
     {
-
-    }
-
-    public void Reload()
-    {
+        //Wait for the reload time
+        yield return new WaitForSeconds(reloadTime);
+        //Stop reloading
         //Reset the clip size
-        currentClip = Mathf.Min(clipSize, currentAmmo);
-        //Update the ammo counter
-        ammoCounter.SetClipCounter(currentClip);
+        currentClip = clipSize;
+    }
+
+    public bool CanShoot()
+    {
+        //Check if the enemy can shoot
+        if (currentClip > 0 && IsPlayerInSight() && GetDistanceToPlayer() < minshootDistance)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void ShootingBehaviour()
+    {
+        cooldownTimer -= Time.deltaTime;
+        //The enemy tries to shoot if they can
+        if (CanShoot() && cooldownTimer <= 0)
+        {
+            Shoot();
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        ShootingBehaviour();
     }
 }

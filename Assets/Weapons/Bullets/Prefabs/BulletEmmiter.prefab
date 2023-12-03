@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 939483084825543846}
-  - component: {fileID: 8879306881731574099}
   - component: {fileID: 7763074337007439297}
   - component: {fileID: 7486911017000347704}
   - component: {fileID: 1627650376714313564}
-  - component: {fileID: 8148790798802505384}
+  - component: {fileID: 8824024113951625027}
+  - component: {fileID: 1892174106467353281}
   m_Layer: 0
   m_Name: BulletEmmiter
   m_TagString: Untagged
@@ -36,21 +36,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &8879306881731574099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5088750987935703421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e461bb2cffceba4180f71698a4df6ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  system: {fileID: 7763074337007439297}
-  shakeTime: 0
-  shakeMagnitude: 0
 --- !u!198 &7763074337007439297
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4934,7 +4919,7 @@ MonoBehaviour:
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &8148790798802505384
+--- !u!114 &8824024113951625027
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4943,6 +4928,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 5088750987935703421}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 319c89cda25280e4a92abd3985bb0498, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f07dae9efdbc414f8b1c8931dcc820b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponStats: {fileID: 1892174106467353281}
+--- !u!114 &1892174106467353281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5088750987935703421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5eb7fa37dd4dbc49bf7ae9b26d9528b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  system: {fileID: 7763074337007439297}
+  weaponType: 0
+  reloadTime: 2
+  fireRate: 0.3
+  damage: 15
+  range: 20
+  accuracy: 1
+  burstCount: 3
+  burstDelay: 0.3
+  shakeTime: 0.1
+  shakeMagnitude: 0.1
+  totalAmmo: 350
+  clipSize: 35
