@@ -8,40 +8,64 @@ public class WeaponHandler : MonoBehaviour
     //This files depend on if the user has a the weapon or if an enemy has the weapon
 
     private GameObject owner;
-    private PickaableGun pickaableGun;
     private EnemyShoot enemyShoot;
     private EnemyGunMovement enemyGunMovement;
     private GunMovement gunMovement;
     private AdvancedBulletEmmiter playerShoot;
-    private BoxCollider2D boxCollider2D;
+    private WeaponStats weaponStats;
+    private ParticleSystem system;
 
     // Start is called before the first frame update
     void Start()
     {
-        pickaableGun = GetComponent<PickaableGun>();
+        ChangeOwner();
+    }
+    public void ChangeOwner()
+    {
         enemyShoot = GetComponentInChildren<EnemyShoot>();
         enemyGunMovement = GetComponent<EnemyGunMovement>();
         gunMovement = GetComponent<GunMovement>();
         playerShoot = GetComponentInChildren<AdvancedBulletEmmiter>();
+        weaponStats = GetComponentInChildren<WeaponStats>();
+        system = weaponStats.system;
         
-        
-        owner = transform.parent.gameObject;
-        if(owner.tag == "Enemy")
+        //If it has a parent
+        if(transform.parent != null)
         {
-            pickaableGun.enabled = false;
-            playerShoot.enabled = false;
-            enemyShoot.enabled = true;
-            enemyGunMovement.enabled = true;
-            gunMovement.enabled = false;
+            owner = transform.parent.gameObject;
+            if (owner.tag == "Enemy")
+            {
+                playerShoot.enabled = false;
+                enemyShoot.enabled = true;
+                enemyGunMovement.enabled = true;
+                gunMovement.enabled = false;
+                //Set the bullet material to the enemy material
+                system.GetComponent<ParticleSystemRenderer>().material = weaponStats.enemyBulletMaterial;
+                //Set the correct collision layers in the particle system. In this case with CollidableWall and Player
+                var collision = system.collision;
+                collision.collidesWith = LayerMask.GetMask("CollidableWall", "Player");
+
             
-        }
+            }
+            else if(owner.tag == "Character")
+            {
+                enemyShoot.enabled = false;
+                enemyGunMovement.enabled = false;
+                gunMovement.enabled = true;
+                playerShoot.enabled = true;
+                //Set the bullet material to the player material
+                system.GetComponent<ParticleSystemRenderer>().material = weaponStats.playerBulletMaterial;
+                //Set the correct collision layers in the particle system. In this case with CollidableWall and Enemy
+                var collision = system.collision;
+                collision.collidesWith = LayerMask.GetMask("CollidableWall", "Enemy");
+            }
+        }       
         else
         {
-            pickaableGun.enabled = true;
             enemyShoot.enabled = false;
             enemyGunMovement.enabled = false;
-            gunMovement.enabled = true;
-            playerShoot.enabled = true;
+            gunMovement.enabled = false;
+            playerShoot.enabled = false;
         }
     }
 

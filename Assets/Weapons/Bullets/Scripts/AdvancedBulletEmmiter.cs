@@ -13,6 +13,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
     private float reloadTime; public float ReloadTime { get => reloadTime; set => reloadTime = value; }
     private float fireRate; public float FireRate { get => fireRate; set => fireRate = value; }
     private float damage; public float Damage { get => damage; set => damage = value; }
+    private float knockback; public float Knockback { get => knockback; set => knockback = value; }
     private float range; public float Range { get => range; set => range = value; }
     private float accuracy; public float Accuracy { get => accuracy; set => accuracy = value; }
     private int burstCount; public int BurstCount { get => burstCount; set => burstCount = value; }
@@ -53,6 +54,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         reloadTime = weaponStats.reloadTime;
         fireRate = weaponStats.fireRate;
         damage = weaponStats.damage;
+        knockback = weaponStats.knockback;
         range = weaponStats.range;
         accuracy = weaponStats.accuracy;
         burstCount = weaponStats.burstCount;

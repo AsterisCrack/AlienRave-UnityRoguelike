@@ -3853,7 +3853,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 8
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -4863,7 +4863,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 0.2
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -4949,11 +4949,14 @@ MonoBehaviour:
   reloadTime: 2
   fireRate: 0.3
   damage: 15
+  knockback: 20
   range: 20
   accuracy: 1
   burstCount: 3
   burstDelay: 0.3
-  shakeTime: 0.1
-  shakeMagnitude: 0.1
+  shakeTime: 0.07
+  shakeMagnitude: 0.05
   totalAmmo: 350
   clipSize: 35
+  enemyBulletMaterial: {fileID: 2100000, guid: 74bc882234c34d249a4ccc53a758ec2c, type: 2}
+  playerBulletMaterial: {fileID: 2100000, guid: 03342b26bf85f714898306563f2839ee, type: 2}

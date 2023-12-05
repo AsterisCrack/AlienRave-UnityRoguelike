@@ -14,6 +14,7 @@ public class WeaponStats : MonoBehaviour
     [SerializeField] public float reloadTime;
     [SerializeField] public float fireRate;
     [SerializeField] public float damage;
+    [SerializeField] public float knockback;
     [SerializeField] public float range;
     [SerializeField] public float accuracy;
     [SerializeField] public int burstCount;
@@ -24,4 +25,8 @@ public class WeaponStats : MonoBehaviour
     [Header("Ammo")]
     [SerializeField] public int totalAmmo;
     [SerializeField] public int clipSize;
+
+    [Header("Bullet")]
+    [SerializeField] public Material enemyBulletMaterial;
+    [SerializeField] public Material playerBulletMaterial;
 }

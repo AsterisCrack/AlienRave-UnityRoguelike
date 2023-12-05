@@ -34,6 +34,7 @@ public class PickaableGun : MonoBehaviour
     private GameObject bulletEmitter;
     private AdvancedBulletEmmiter bulletEmitterScript;
     private GunMovement gunMovementScript;
+    private WeaponHandler weaponHandler;
 
     private int GetLayerNumberFromMask(LayerMask mask)
     {
@@ -52,8 +53,7 @@ public class PickaableGun : MonoBehaviour
         if(picked)
         {
             isPickedUp = true;
-            bulletEmitterScript.enabled = true;
-            gunMovementScript.enabled = true;
+            weaponHandler.ChangeOwner();
             GetComponent<SpriteRenderer>().sortingOrder = pickedGunViewLayer;
             //set layer to picked gun
             int layerNumber = GetLayerNumberFromMask(pickedGunLayer);
@@ -70,8 +70,7 @@ public class PickaableGun : MonoBehaviour
         else
         {
             isPickedUp = false;
-            bulletEmitterScript.enabled = false;
-            gunMovementScript.enabled = false;
+            weaponHandler.ChangeOwner();
             GetComponent<SpriteRenderer>().sortingOrder = itemViewLayer;
             //set layer to item
             int layerNumber = GetLayerNumberFromMask(itemLayer);
@@ -91,6 +90,10 @@ public class PickaableGun : MonoBehaviour
     {
         //Get the player
         player = GameObject.FindGameObjectWithTag("Character");
+        if (player == null)
+        {
+            Debug.LogError("Player not found");
+        }
         //Get the player input
         playerInput = player.GetComponent<PlayerInput>();
         //Get the pick action
@@ -100,9 +103,16 @@ public class PickaableGun : MonoBehaviour
 
         //Get the gun inventory
         gunInventory = player.GetComponent<GunInventory>();
+        if (gunInventory == null)
+        {
+            Debug.LogError("Gun inventory not found");
+        }
 
         //Get the gun collider
         gunCollider = GetComponent<Collider2D>();
+
+        //get the weapon handler
+        weaponHandler = GetComponent<WeaponHandler>();
 
         //Get the bullet emitter. It is the child with tag buelletEmitter
         foreach (Transform child in transform)
@@ -151,7 +161,7 @@ public class PickaableGun : MonoBehaviour
         else
         {
             //Check if the drop action is triggered
-            if (dropAction.triggered)
+            if (dropAction.triggered && transform.parent == player.transform)
             {
                 Drop();
             }
@@ -187,11 +197,13 @@ public class PickaableGun : MonoBehaviour
         transform.localScale = localScale;
 
         SetGunParams(true);
-
+        Debug.Log("Picked up");
+        Debug.Log("Gun inventory: " + gunInventory);
+        Debug.Log("Gun: " + gameObject);
         gunInventory.AddGunToInventory(gameObject);
     }
 
-    private void Drop()
+    public void Drop(bool fromPlayer=true)
     {
         transform.SetParent(null);
         SetGunParams(false);
@@ -201,8 +213,10 @@ public class PickaableGun : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0f;
         rb.AddForce(transform.forward * dropForce, ForceMode2D.Impulse);
-
-        gunInventory.DeleteGunFromInventory(gameObject);
+        if(fromPlayer)
+        {
+            gunInventory.DeleteGunFromInventory(gameObject);
+        }
     }
 
 }

@@ -9,6 +9,7 @@ TagManager:
   - Character
   - Enemy
   - BulletEmitter
+  - CharacterBullet
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - DropedItem
   - PickedGun
   - Player
-  - 
+  - Enemy
   - 
   - 
   - 
