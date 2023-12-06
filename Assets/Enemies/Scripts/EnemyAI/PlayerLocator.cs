@@ -38,4 +38,10 @@ public class PlayerLocator : MonoBehaviour
         //Get distance to player
         return Vector2.Distance(transform.position, player.transform.position);
     }
+
+    public bool IsPlayerAlive()
+    {
+        //Check if player is alive
+        return player.GetComponent<HealthHandler>().CurrentHealth > 0;
+    }
 }

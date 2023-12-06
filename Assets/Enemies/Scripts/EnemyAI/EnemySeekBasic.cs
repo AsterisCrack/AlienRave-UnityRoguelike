@@ -5,7 +5,7 @@ using Pathfinding;
 
 public class EnemySeekBasic : PlayerLocator
 {
-    [SerializeField] private Transform target;
+    private Transform target;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float nextWaypointDistance = 3f;
     [SerializeField] private float stoppingDistance = 4f;
@@ -30,7 +30,7 @@ public class EnemySeekBasic : PlayerLocator
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
-
+        target = player.transform;
         seeker.StartPath(rb.position, target.position, OnPathComplete);
         StartCoroutine(UpdatePathCoroutine());
     }

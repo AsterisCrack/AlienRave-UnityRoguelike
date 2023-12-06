@@ -102,7 +102,7 @@ public class EnemyShoot : PlayerLocator
     public bool CanShoot()
     {
         //Check if the enemy can shoot
-        if (currentClip > 0 && IsPlayerInSight() && GetDistanceToPlayer() < minshootDistance)
+        if (currentClip > 0 && IsPlayerInSight() && GetDistanceToPlayer() < minshootDistance && IsPlayerAlive())
         {
             return true;
         }

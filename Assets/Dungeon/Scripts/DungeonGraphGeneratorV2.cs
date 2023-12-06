@@ -43,6 +43,10 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     [Header("Corridor settings")]
     [SerializeField] private int hallwayWidth;
 
+    [Header("Needed prefabs")]
+    [SerializeField] private GameObject roomTriggerPrefab;
+    private List<TriggerCreator> triggers = new List<TriggerCreator>();
+
     [Header("Visualization settings")]
     [SerializeField] private bool visualizeGraph;
     [SerializeField] private float nodeSize;
@@ -72,6 +76,9 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     private int matrixDisplacementY;
 
     private SetAstarGraph setAstarGraph;
+
+    //event when finished
+    public event Action<Vector2> OnFinished;
 
     private void AddRoomToMatrix(float x, float y, int roomWidth, int roomHeight, Room room)
     {
@@ -204,6 +211,22 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         return frontierList;
     }
 
+    private void ClearPreviousTriggers()
+    {
+        //Destroy all children
+        foreach (Transform child in transform)
+        {
+            if (Application.isPlaying)
+            {
+                Destroy(child.gameObject);
+            }
+            else
+            {
+                DestroyImmediate(child.gameObject);
+            }
+        }
+        triggers.Clear();
+    }
     //Initialise the graph
     public void InitialiseGraph()
     {
@@ -233,10 +256,14 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         //Generate the hallways
         stopwatch.Reset();
         stopwatch.Start();
-        GenerateHallways();
+        bool errorInHallways = GenerateHallways();
         stopwatch.Stop();
         if (verbose) Debug.Log("Hallways generated in: " + stopwatch.ElapsedMilliseconds + " ms");
 
+        if (errorInHallways)
+        {
+            return;
+        }
         //Get room depths
         stopwatch.Reset();
         stopwatch.Start();
@@ -257,14 +284,39 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             if (verbose) Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
         }
 
+        //Instantiate all triggers
+        foreach (TriggerCreator trigger in triggers)
+        {
+            Vector2 pos = trigger.Pos;
+            GameObject go = Instantiate(roomTriggerPrefab, pos, Quaternion.identity);
+            trigger.InstantiateTrigger(go);
+        }
+
         //Set the Astar graph
         setAstarGraph= GetComponent<SetAstarGraph>();
         setAstarGraph.SetGraph(roomMatrix.GetLength(0), roomMatrix.GetLength(1), matrixDisplacementX + (float)roomMatrix.GetLength(0)/ 2f + 0.5f, matrixDisplacementY + (float)roomMatrix.GetLength(1)/2f);
+
+        //Invoke the event with the position of the first node
+        if (Application.isPlaying)
+        {
+            Node node = nodes[0];
+            foreach (Node n in nodes)
+            {
+                if (n.type == Node.roomType.start)
+                {
+                    node = n;
+                    break;
+                }
+            }
+            node.visited = true;
+            OnFinished.Invoke(node.Position);
+        }
     }
 
     //First generate the nodes randomly
     private List<Node> GenerateNodes()
     {
+        ClearPreviousTriggers();
         //Generate a random number of rooms
         int numRooms = UnityEngine.Random.Range(minRooms, maxRooms);
         //First we generate first node in the center of the map
@@ -289,6 +341,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         AddRoomToMatrix(0, 0, roomWidth, roomHeight, roomInstance);
         //Add the node to the list
         nodes.Add(new Node(0, 0, 0, roomInstance, roomWidth, roomHeight));
+        //Add this rooms trigger
+        triggers.Add(new TriggerCreator(new Vector2(0, 0), gameObject, nodes[0]));
 
         //Generate the rooms
         for (int i = 1; i < numRooms; i++)
@@ -346,6 +400,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
 
             //Now we need to add the node to the list
             nodes.Add(new Node(i, (int)roomPos.x, (int)roomPos.y, roomInstance, roomWidth, roomHeight));
+            //Add this rooms trigger
+            triggers.Add(new TriggerCreator(roomPos, gameObject, nodes[i]));
         }
         return nodes;
     }
@@ -643,7 +699,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
         }
     }
 
-    private void GenerateHallways()
+    private bool GenerateHallways()
     {
         //Generate and draw the hallways between the rooms
         List<Edge> edgesCopy = new List<Edge>(edges);
@@ -687,6 +743,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                 int hallwayLeft = Mathf.Min(n1Right, n2Right) - matrixDisplacementX;
                 int hallwayBottom = Mathf.Min(n1Top, n2Top) - matrixDisplacementY;
                 int hallwayTop = Mathf.Max(n1Bottom, n2Bottom) - matrixDisplacementY;
+                
                 //Generate a random position for the hallway
                 //int hallwayPos = horizontal ? UnityEngine.Random.Range(hallwayLeft, hallwayRight) : UnityEngine.Random.Range(hallwayBottom, hallwayTop);
 
@@ -750,7 +807,8 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                 //Insert it in the MapMatrix
 
                 //Generate hallways
-                if (horizontal) { 
+                if (horizontal)
+                {
                     for (int i = hallwayBottom + hallwayWidth; i < hallwayTop; i++)
                     {
                         for (int j = 0; j < hallwayWidth; j++)
@@ -758,6 +816,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                             roomMatrix[hallwayPos + j, i] = true;
                         }
                     }
+
                 }
                 else
                 {
@@ -982,7 +1041,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                             roomMatrix[start + j, i] = true;
                         }
                     }
-
+                    
                     //Horizontal part. Starts on s2
                     start = (int)selectedCorner[1][s2].y;
                     int xStart = (selectedCorner[1][s2] == posLeft) ? (int)posLeft.x - 1 : (int)posLeft.x;            
@@ -1030,6 +1089,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
 
             InitialiseGraph();
         }
+        return success == false;
     }
 
     public void OnDrawGizmos()

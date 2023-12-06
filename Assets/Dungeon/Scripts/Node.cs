@@ -27,6 +27,7 @@ public class Node
 
     public int rank;
     public int depth;
+    public bool visited;
 
     //Initialise the node
     public Node(int id, int x, int y, Room room, int roomWidth=0, int roomHeight=0, roomType type=roomType.normal)
@@ -44,6 +45,7 @@ public class Node
 
         rank = 0;
         depth = 0;
+        visited = false;
         //Set the type of the room
         this.type = type;
         this.room = room;

@@ -22,7 +22,26 @@ public class EnemyHealthHandler : MonoBehaviour
         {
             float damage = other.GetComponent<WeaponStats>().damage;
             float knockback = other.GetComponent<WeaponStats>().knockback;
-            Vector2 direction = other.GetComponent<WeaponStats>().system.transform.right;
+            Vector2 direction = other.transform.forward;
+
+            //destroy bullet
+            ParticleSystem ps = other.GetComponent<ParticleSystem>();
+            var particles = new ParticleSystem.Particle[ps.particleCount];
+            ps.GetParticles(particles);
+            int closestParticle = 0;
+            float closestDistance = Mathf.Infinity;
+            for (int i = 0; i < particles.Length; i++)
+            {
+                float distance = Vector2.Distance(particles[i].position, transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestParticle = i;
+                }
+            }
+            particles[closestParticle].remainingLifetime = 0;
+            ps.SetParticles(particles);
+
             TakeDamage(damage, knockback, direction);
         }
     }
@@ -30,7 +49,8 @@ public class EnemyHealthHandler : MonoBehaviour
     private void TakeDamage(float damage, float knockback, Vector2 direction)
     {
         currentHealth -= (int)damage;
-        GetComponent<Rigidbody2D>().AddForce(direction * knockback, ForceMode2D.Impulse);
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.AddForce(direction.normalized * knockback, ForceMode2D.Impulse); // Normalize direction vector
         if (currentHealth <= 0)
         {
             Die();

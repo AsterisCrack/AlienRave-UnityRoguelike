@@ -247,6 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3ecf5f43f82124d864a1b1e12dc606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   alwaysPointPlayer: 1
 --- !u!1001 &6632993682267238631
 PrefabInstance:
@@ -347,12 +348,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5088750987935703421, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 3923208220579550288}
-    - targetCorrespondingSourceObject: {fileID: 5088750987935703421, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
-      insertIndex: 2
-      addedObject: {fileID: 8148465235397903746}
-    - targetCorrespondingSourceObject: {fileID: 5088750987935703421, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4263976167484439670}
     - targetCorrespondingSourceObject: {fileID: 5088750987935703421, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
@@ -364,44 +359,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5088750987935703421, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
   m_PrefabInstance: {fileID: 6632993682267238631}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3923208220579550288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915086006548271514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f07dae9efdbc414f8b1c8931dcc820b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponStats: {fileID: 8148465235397903746}
---- !u!114 &8148465235397903746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915086006548271514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5eb7fa37dd4dbc49bf7ae9b26d9528b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  system: {fileID: 4014636253675093286}
-  weaponType: 1
-  reloadTime: 2
-  fireRate: 0.3
-  damage: 10
-  range: 5
-  accuracy: 1
-  burstCount: 3
-  burstDelay: 0.5
-  shakeTime: 0.2
-  shakeMagnitude: 0.3
-  totalAmmo: 100
-  clipSize: 9
 --- !u!210 &4263976167484439670
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -426,25 +383,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8816e1d9f1dec46a8201bd418794ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  system: {fileID: 0}
-  weaponType: 0
-  reloadTime: 0
-  fireRate: 0
-  damage: 0
-  range: 0
-  accuracy: 0
-  burstCount: 0
-  burstDelay: 0
-  shakeTime: 0
-  shakeMagnitude: 0
-  bulletEmitter: {fileID: 0}
-  totalAmmo: 0
-  clipSize: 0
---- !u!198 &4014636253675093286 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 7763074337007439297, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}
-  m_PrefabInstance: {fileID: 6632993682267238631}
-  m_PrefabAsset: {fileID: 0}
+  player: {fileID: 0}
+  weaponStats: {fileID: 0}
+  minshootDistance: 10
 --- !u!4 &5837956490047075393 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 939483084825543846, guid: 040a2d5f75b63f8409d273d8d3466d70, type: 3}

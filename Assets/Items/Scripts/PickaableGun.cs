@@ -103,10 +103,6 @@ public class PickaableGun : MonoBehaviour
 
         //Get the gun inventory
         gunInventory = player.GetComponent<GunInventory>();
-        if (gunInventory == null)
-        {
-            Debug.LogError("Gun inventory not found");
-        }
 
         //Get the gun collider
         gunCollider = GetComponent<Collider2D>();
@@ -123,7 +119,11 @@ public class PickaableGun : MonoBehaviour
                 break;
             }
         }
-        bulletEmitterScript = bulletEmitter.GetComponent<AdvancedBulletEmmiter>();
+        if (bulletEmitter != null)
+        {
+            bulletEmitterScript = bulletEmitter.GetComponent<AdvancedBulletEmmiter>();
+        }
+        
         gunMovementScript = GetComponent<GunMovement>();
 
         //Check if it has a parent
@@ -197,9 +197,6 @@ public class PickaableGun : MonoBehaviour
         transform.localScale = localScale;
 
         SetGunParams(true);
-        Debug.Log("Picked up");
-        Debug.Log("Gun inventory: " + gunInventory);
-        Debug.Log("Gun: " + gameObject);
         gunInventory.AddGunToInventory(gameObject);
     }
 
@@ -208,11 +205,17 @@ public class PickaableGun : MonoBehaviour
         transform.SetParent(null);
         SetGunParams(false);
 
+        Vector2 direction = transform.forward;
+
+        //Reset rotation values
+        transform.rotation = Quaternion.identity;
+
         //Set a small velocity to the gun
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0f;
-        rb.AddForce(transform.forward * dropForce, ForceMode2D.Impulse);
+        
+        rb.AddForce(direction * dropForce, ForceMode2D.Impulse);
         if(fromPlayer)
         {
             gunInventory.DeleteGunFromInventory(gameObject);
