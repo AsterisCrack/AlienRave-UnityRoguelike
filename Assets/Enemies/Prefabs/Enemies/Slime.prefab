@@ -79,7 +79,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  target: {fileID: 0}
   speed: 300
   nextWaypointDistance: 0.2
   stoppingDistance: 5
@@ -332,6 +331,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5066403137336586790, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
       propertyPath: fireRate
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066403137336586790, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
+      propertyPath: reloadTime
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5066403137336586790, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
@@ -355,9 +358,17 @@ PrefabInstance:
       value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8633939944210491292, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
+      propertyPath: bulletSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8633939944210491292, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
       propertyPath: weaponStats
       value: 
       objectReference: {fileID: 3661932935890623652}
+    - target: {fileID: 8633939944210491292, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
+      propertyPath: timeBetweenShots
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

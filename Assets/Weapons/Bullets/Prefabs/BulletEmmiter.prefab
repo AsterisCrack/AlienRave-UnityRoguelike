@@ -4948,6 +4948,7 @@ MonoBehaviour:
   weaponType: 0
   reloadTime: 2
   fireRate: 0.3
+  bulletSpeed: 15
   damage: 15
   knockback: 1
   range: 20

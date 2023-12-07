@@ -11,6 +11,8 @@ public class EnemyShoot : PlayerLocator
 
     [Header("Enemy options")]
     [SerializeField] float minshootDistance = 10f;
+    [SerializeField] float bulletSpeed = 5f;
+    [SerializeField] float timeBetweenShots = 0.5f;
 
     private WeaponStats.WeaponType weaponType;
     private ParticleSystem system;
@@ -33,7 +35,8 @@ public class EnemyShoot : PlayerLocator
     private CameraShake cameraShake;
 
     //Neccessary variables
-    private float cooldownTimer;
+    private float reloadTimer;
+    private float shootTimer;
 
     // Start is called before the first frame update
     void Awake()
@@ -47,7 +50,7 @@ public class EnemyShoot : PlayerLocator
         //Set the weapon stats
         system = weaponStats.system;
         weaponType = weaponStats.weaponType;
-        reloadTime = weaponStats.reloadTime;
+        reloadTime = timeBetweenShots;
         fireRate = weaponStats.fireRate;
         damage = weaponStats.damage;
         range = weaponStats.range;
@@ -57,10 +60,31 @@ public class EnemyShoot : PlayerLocator
         shakeTime = weaponStats.shakeTime;
         shakeMagnitude = weaponStats.shakeMagnitude;
         clipSize = weaponStats.clipSize;
+
+        //Set the ammo counters according to the 
+        switch (weaponType)
+        {
+            case WeaponStats.WeaponType.SemiAutomatic:
+                clipSize = 1;
+                break;
+            case WeaponStats.WeaponType.Automatic:
+                break;
+            case WeaponStats.WeaponType.Burst:
+                clipSize = burstCount;
+                break;
+            default:
+                clipSize = 1;
+                break;
+        }
+
+        //Set particle system particle speed to bullet speed
+        var main = system.main;
+        main.startSpeed = bulletSpeed;
     }
     void Start()
     {
-        cooldownTimer = 0;
+        reloadTimer = timeBetweenShots;
+        shootTimer = 0;
         system = GetComponent<ParticleSystem>();
         //Set the ammo counters
         currentClip = clipSize;
@@ -76,7 +100,7 @@ public class EnemyShoot : PlayerLocator
 
     public void Shoot()
     {
-        cooldownTimer = fireRate;
+        shootTimer = fireRate;
         //Update ammo counters
         currentAmmo--;
         currentClip--;
@@ -111,9 +135,9 @@ public class EnemyShoot : PlayerLocator
 
     public void ShootingBehaviour()
     {
-        cooldownTimer -= Time.deltaTime;
+        reloadTimer -= Time.deltaTime;
         //The enemy tries to shoot if they can
-        if (CanShoot() && cooldownTimer <= 0)
+        if (CanShoot() && reloadTimer <= 0)
         {
             Shoot();
         }

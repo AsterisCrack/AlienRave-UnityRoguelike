@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class EnemyHealthHandler : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField] protected int maxHealth = 100;
     private PickaableGun pickableGun;
     private GameObject gun;
-    private int currentHealth;
+    protected int currentHealth;
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         currentHealth = maxHealth;
         pickableGun = GetComponentInChildren<PickaableGun>();
@@ -46,7 +46,7 @@ public class EnemyHealthHandler : MonoBehaviour
         }
     }
 
-    private void TakeDamage(float damage, float knockback, Vector2 direction)
+    protected virtual void TakeDamage(float damage, float knockback, Vector2 direction)
     {
         currentHealth -= (int)damage;
         Rigidbody2D rb = GetComponent<Rigidbody2D>();

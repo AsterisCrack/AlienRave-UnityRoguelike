@@ -6,6 +6,9 @@ using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [SerializeField] private GameObject spawnCircle;
+    [SerializeField] private float spawnTime = 1;
+
     [Header("Enemies")]
     [SerializeField] private List<GameObject> enemiesDepth1;
     [SerializeField] private List<GameObject> enemiesDepth2;
@@ -38,16 +41,39 @@ public class EnemySpawner : MonoBehaviour
         instance = this;
     }
 
-    public void Spawn(Vector2 centerPos, int width, int height, int depth)
+    public IEnumerator Spawn(Vector2 centerPos, int width, int height, int depth)
     {
         int area = (width+4) * (height+4);
         List<GameObject> enemies = GetEnemies(depth);
         int enemyCountMultiplier = GetEnemyCount(depth);
         int enemyCount = (int)(area / 100 * Random.Range(enemyCountPer100m2.x, enemyCountPer100m2.y) * enemyCountMultiplier);
+        List<Vector2> spawnPositions = new List<Vector2>();
+        List<GameObject> spawnCircles = new List<GameObject>();
         for (int i = 0; i < enemyCount; i++)
         {
             Vector2 spawnPos = new Vector2(Random.Range(centerPos.x - width / 2, centerPos.x + width / 2), Random.Range(centerPos.y - height / 2, centerPos.y + height / 2));
-            Instantiate(enemies[Random.Range(0, enemies.Count)], spawnPos, Quaternion.identity);
+            spawnPositions.Add(spawnPos);
+            GameObject spawnCircleInstance = Instantiate(spawnCircle, spawnPos, Quaternion.identity);
+            //Start at scale 0, we will increase it later
+            spawnCircleInstance.transform.localScale = Vector3.zero;
+            spawnCircles.Add(spawnCircleInstance);
+        }
+
+        //Increase the scale of the spawn circles until it reaches 1 at the end of the coroutine
+        for (float i = 0; i < 1; i += Time.deltaTime / spawnTime)
+        {
+            foreach (GameObject spawnCircleInstance in spawnCircles)
+            {
+                spawnCircleInstance.transform.localScale = new Vector3(i, i, 0);
+            }
+            yield return null;
+        }
+
+        //Spawn the enemies
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Destroy(spawnCircles[i]);
+            Instantiate(enemies[Random.Range(0, enemies.Count)], spawnPositions[i], Quaternion.identity);
         }
     }   
 

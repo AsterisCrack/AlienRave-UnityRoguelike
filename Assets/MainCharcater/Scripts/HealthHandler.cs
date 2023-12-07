@@ -21,7 +21,7 @@ public class HealthHandler : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        if (other.CompareTag("EnemyBullet") && !playerMovement.IsDashing)
+        if (other.CompareTag("EnemyBullet"))
         {
             float knockback = other.GetComponent<WeaponStats>().knockback;
             Vector2 direction = other.transform.forward;

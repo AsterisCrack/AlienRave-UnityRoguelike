@@ -32,8 +32,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashDistance = 5f;
     [SerializeField] private float dashCooldown = 0.3f;
 
-    private bool isDashing = false;
-    public bool IsDashing { get { return isDashing; } }
+    private bool isDashing = false; public bool IsDashing { get { return isDashing; } }
+    private bool isInmune = false; public bool IsInmune { get { return isInmune; } }
     private bool canDash = true;
     private float dashDistanceLeft;
 
@@ -64,10 +64,21 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //If is inmune deactivate the collider
+        if (isInmune)
+        {
+            playerCollider.enabled = false;
+        }
+        else
+        {
+            playerCollider.enabled = true;
+        }
+        //If is dashing, don't move
         if (isDashing)
         {
             return;
         }
+
         Move();
     }
     private void FixedUpdate()
@@ -220,13 +231,15 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Dash(Vector2 direction)
     {
         isDashing = true;
+        isInmune = true;
         //Animate the dash
         AnimateDash(direction);
         
         canDash = false;
         direction.Normalize();
         dashDistanceLeft = CanDashInDirection(direction);
-        
+        float totalDashDistance = dashDistanceLeft;
+        float time = Time.time;
         while (dashDistanceLeft > 0)
         {
             float nextDistance = dashSpeed * Time.deltaTime;
@@ -236,9 +249,21 @@ public class PlayerMovement : MonoBehaviour
             }
             transform.Translate(direction * nextDistance);
             dashDistanceLeft -= nextDistance;
+            if (dashDistanceLeft <= totalDashDistance / 2)
+            {
+                isInmune = false;
+            }
             yield return null;
         }
         rb.velocity = Vector2.zero;
+
+        //deleay the remaining time. The dash lasts a total of 0.67 seconds
+        float timeLeft = 0.67f - (Time.time - time);
+        if (timeLeft > 0)
+        {
+            yield return new WaitForSeconds(timeLeft);
+        }
+
         isDashing = false;
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;

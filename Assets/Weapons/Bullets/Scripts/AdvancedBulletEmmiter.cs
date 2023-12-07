@@ -12,6 +12,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
     private ParticleSystem system;
     private float reloadTime; public float ReloadTime { get => reloadTime; set => reloadTime = value; }
     private float fireRate; public float FireRate { get => fireRate; set => fireRate = value; }
+    private float bulletSpeed; public float BulletSpeed { get => bulletSpeed; set => bulletSpeed = value; }
     private float damage; public float Damage { get => damage; set => damage = value; }
     private float knockback; public float Knockback { get => knockback; set => knockback = value; }
     private float range; public float Range { get => range; set => range = value; }
@@ -53,6 +54,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         weaponType = weaponStats.weaponType;
         reloadTime = weaponStats.reloadTime;
         fireRate = weaponStats.fireRate;
+        bulletSpeed = weaponStats.bulletSpeed;
         damage = weaponStats.damage;
         knockback = weaponStats.knockback;
         range = weaponStats.range;
@@ -120,6 +122,10 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         if (currentClip == -1) currentClip = clipSize;
         ammoCounter.SetAmmoCounter(currentAmmo);
         ammoCounter.SetClipCounter(currentClip);
+
+        //Set particle system speed to bullet speed
+        var main = system.main;
+        main.startSpeed = bulletSpeed;
     }
 
     private void OnDisable()

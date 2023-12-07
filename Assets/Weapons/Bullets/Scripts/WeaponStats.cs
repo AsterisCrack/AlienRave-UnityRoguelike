@@ -13,6 +13,7 @@ public class WeaponStats : MonoBehaviour
     [Header("Characteristics")]
     [SerializeField] public float reloadTime;
     [SerializeField] public float fireRate;
+    [SerializeField] public float bulletSpeed;
     [SerializeField] public float damage;
     [SerializeField] public float knockback;
     [SerializeField] public float range;

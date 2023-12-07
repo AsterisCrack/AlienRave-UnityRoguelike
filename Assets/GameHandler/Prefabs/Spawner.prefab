@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2920819706579124387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5029106444655962992}
+  - component: {fileID: 7858277366658804155}
+  m_Layer: 0
+  m_Name: Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5029106444655962992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920819706579124387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7858277366658804155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920819706579124387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b10f022108ff1e4cab56f9dca2b8ad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnCircle: {fileID: 8286582426461606259, guid: a5be20b0da6160f499c6b44b491a9dd9, type: 3}
+  spawnTime: 0
+  enemiesDepth1:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth2:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth3:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth4:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth5:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth6:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth7:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth8:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth9:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemiesDepth10:
+  - {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+  enemyCountPer100m2: {x: 1, y: 3}
+  enemyCountDepth1: 1
+  enemyCountDepth2: 1
+  enemyCountDepth3: 1
+  enemyCountDepth4: 1
+  enemyCountDepth5: 2
+  enemyCountDepth6: 2
+  enemyCountDepth7: 2
+  enemyCountDepth8: 2
+  enemyCountDepth9: 2
+  enemyCountDepth10: 2

@@ -51,7 +51,7 @@ public class HeartUIHandler : MonoBehaviour
     public bool LowerHealth()
     {
         int thisHealth = hearts[currentHealth - 1].GetComponent<HeartdisplayChange>().LowerHealth();
-        if (thisHealth == 1)
+        if (thisHealth == 1 && currentHealth > 1)
         {
             currentHealth--;
         }

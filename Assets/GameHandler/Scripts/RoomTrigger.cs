@@ -21,7 +21,7 @@ public class RoomTrigger : MonoBehaviour
             int height = node.RoomHeight-4;
             int depth = node.depth;
             Vector2 centerPos = node.Position;
-            enemySpawner.Spawn(centerPos, width, height, depth);
+            StartCoroutine(enemySpawner.Spawn(centerPos, width, height, depth));
         }
     }
 
