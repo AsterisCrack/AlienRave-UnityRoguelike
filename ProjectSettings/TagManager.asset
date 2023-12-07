@@ -11,6 +11,7 @@ TagManager:
   - BulletEmitter
   - CharacterBullet
   - EnemyBullet
+  - BossHealthBar
   layers:
   - Default
   - TransparentFX
