@@ -81,6 +81,9 @@ public class GunInventory : MonoBehaviour
         {
             if(gun.name == g.name)
             {
+                //Recharge ammo and delete the gun
+                g.GetComponentInChildren<AdvancedBulletEmmiter>().RechargeAmmo();
+                Destroy(gun);
                 return;
             }
         }

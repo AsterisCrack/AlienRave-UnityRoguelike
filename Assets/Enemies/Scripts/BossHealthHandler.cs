@@ -14,6 +14,7 @@ public class BossHealthHandler : EnemyHealthHandler
         {
             //Find health bar
             healthBar = GameObject.FindGameObjectWithTag("BossHealthBar");
+            Debug.Log(healthBar);
         }
         healthBarScript = healthBar.GetComponent<HealthBar>();
         healthBarScript.SetActive(true);

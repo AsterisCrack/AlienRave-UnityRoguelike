@@ -14,14 +14,30 @@ public class RoomTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Character") && !node.visited && node.type == Node.roomType.normal)
+        if (collision.CompareTag("Character") && !node.visited && node.type != Node.roomType.start)
         {
             node.visited = true;
             int width = node.RoomWidth-4;
             int height = node.RoomHeight-4;
             int depth = node.depth;
             Vector2 centerPos = node.Position;
-            StartCoroutine(enemySpawner.Spawn(centerPos, width, height, depth));
+            if (node.type == Node.roomType.boss)
+            {
+                StartCoroutine(enemySpawner.SpawnBoss(centerPos));
+            }
+            else if (node.type == Node.roomType.shop)
+            {
+                return;
+            }
+            else if (node.type == Node.roomType.treasure)
+            {
+                return;
+            }
+            else
+            {
+                StartCoroutine(enemySpawner.Spawn(centerPos, width, height, depth));
+            }
+            
         }
     }
 

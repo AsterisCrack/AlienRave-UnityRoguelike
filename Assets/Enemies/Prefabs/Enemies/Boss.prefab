@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 238511523221702942, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: timeBetweenShots
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 465414720783314161, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 465414720783314161, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 465414720783314161, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 465414720783314161, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,6 +64,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 465414720783314161, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3661932935890623652, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: clipSize
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3661932935890623652, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: weaponType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
       propertyPath: m_Name
       value: Boss
@@ -78,5 +106,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a9226529aad9c4abac81b12ea4c370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 2000
   healthBar: {fileID: 0}

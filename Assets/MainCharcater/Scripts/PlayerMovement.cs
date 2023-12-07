@@ -285,7 +285,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Angle", angle);
 
         //Check if it has children
-        if (gameObject.GetComponentsInChildren<SpriteRenderer>().Length != 0)
+        if (gameObject.GetComponentsInChildren<SpriteRenderer>().Length > 0)
         {
             //Set weapon to visible
             gameObject.GetComponentsInChildren<SpriteRenderer>()[1].enabled = false;

@@ -20,6 +20,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<GameObject> enemiesDepth8;
     [SerializeField] private List<GameObject> enemiesDepth9;
     [SerializeField] private List<GameObject> enemiesDepth10;
+    [SerializeField] private List<GameObject> bosses;
 
     [Header("Enemy counts")]
     [SerializeField] private Vector2 enemyCountPer100m2;
@@ -75,7 +76,27 @@ public class EnemySpawner : MonoBehaviour
             Destroy(spawnCircles[i]);
             Instantiate(enemies[Random.Range(0, enemies.Count)], spawnPositions[i], Quaternion.identity);
         }
-    }   
+    }  
+    
+    public IEnumerator SpawnBoss(Vector2 centerPos)
+    {
+        //Only spawn 1 boss
+        GameObject spawnCircleInstance = Instantiate(spawnCircle, centerPos, Quaternion.identity);
+
+        //Start at scale 0, we will increase it later
+        spawnCircleInstance.transform.localScale = Vector3.zero;
+
+        //Increase the scale of the spawn circles until it reaches 2 at the end of the coroutine (It is bigger because it is a boss)
+        for (float i = 0; i < 2; i += Time.deltaTime / (spawnTime*2))
+        {
+            spawnCircleInstance.transform.localScale = new Vector3(i, i, 0);
+            yield return null;
+        }
+
+        //Spawn the boss
+        Destroy(spawnCircleInstance);
+        Instantiate(bosses[Random.Range(0, bosses.Count)], centerPos, Quaternion.identity);
+    }
 
     private List<GameObject> GetEnemies(int depth)
     {

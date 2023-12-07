@@ -71,6 +71,13 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         reloadAction = playerInput.actions["Reload"];
     }
 
+    public void RechargeAmmo()
+    {
+        currentAmmo = totalAmmo;
+        currentClip = clipSize;
+        ammoCounter.SetAmmoCounter(currentAmmo);
+        ammoCounter.SetClipCounter(currentClip);
+    }
     private void SetShootScriptActive(bool active)
     {
         if (active)
@@ -126,11 +133,16 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         //Set particle system speed to bullet speed
         var main = system.main;
         main.startSpeed = bulletSpeed;
+
+        //Set tag to player bullet
+        gameObject.tag = "CharacterBullet";
     }
 
     private void OnDisable()
     {
-           SetShootScriptActive(false);
+        //Set tag to player bullet
+        gameObject.tag = "EnemyBullet";
+        SetShootScriptActive(false);
     }
 
     //At start, attach the appropiate shooting script

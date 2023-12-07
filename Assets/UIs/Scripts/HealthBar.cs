@@ -10,12 +10,16 @@ public class HealthBar : MonoBehaviour
     private void Awake()
     {
         slider = GetComponent<Slider>();
-        gameObject.SetActive(false);
+        SetActive(false);
     }
 
     public void SetActive(bool active)
     {
-        gameObject.SetActive(active);
+        //Activate or deactivate all children
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(active);
+        }
     }
     
     public void SetMaxHealth(int health)
