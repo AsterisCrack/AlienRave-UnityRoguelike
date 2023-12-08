@@ -76,7 +76,13 @@ public class HealthHandler : MonoBehaviour
         Animator animator = GetComponent<Animator>();
         animator.SetBool("IsAlive", false);
         //animator.Play(deadAnimation.name);
+        StartCoroutine(enterDeathMenu());
+    }
 
+    private IEnumerator enterDeathMenu()
+    {
+        yield return new WaitForSeconds(1);
+        EnterMenu.instance.ToggleMenu("You Died!", false);
         //Disable this script
         enabled = false;
     }

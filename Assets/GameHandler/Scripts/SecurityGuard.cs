@@ -27,12 +27,12 @@ public class SecurityGuard : MonoBehaviour
             case GuardPosition.Left:
                 boxCollider2D.size = new Vector2(1, 2);
                 openTrigger.transform.localRotation = Quaternion.Euler(0, 0, 90);
-                GetComponentInChildren<SpriteRenderer>().flipX = true;
                 animator.SetFloat("Horizontal", 1);
                 animator.SetFloat("Vertical", 0);
                 break;
             case GuardPosition.Right:
                 boxCollider2D.size = new Vector2(1, 2);
+                GetComponentInChildren<SpriteRenderer>().flipX = true;
                 openTrigger.transform.localRotation = Quaternion.Euler(0, 0, -90);
                 animator.SetFloat("Horizontal", -1);
                 animator.SetFloat("Vertical", 0);

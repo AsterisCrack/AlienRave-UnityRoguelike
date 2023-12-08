@@ -20,5 +20,7 @@ public class StartGame : MonoBehaviour
     {
         camera = GameObject.Find("Main Camera");
         dungeonGenerator.OnFinished += OnDungeonFinished;
+        //Time scale to normal
+        Time.timeScale = 1;
     }
 }

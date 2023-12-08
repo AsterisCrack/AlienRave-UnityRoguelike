@@ -14,7 +14,6 @@ public class BossHealthHandler : EnemyHealthHandler
         {
             //Find health bar
             healthBar = GameObject.FindGameObjectWithTag("BossHealthBar");
-            Debug.Log(healthBar);
         }
         healthBarScript = healthBar.GetComponent<HealthBar>();
         healthBarScript.SetActive(true);
@@ -27,5 +26,21 @@ public class BossHealthHandler : EnemyHealthHandler
     {
         base.TakeDamage(damage, knockback, direction);
         healthBarScript.SetHealth(currentHealth);
+    }
+
+    protected override void Die(bool destroy = true)
+    {
+        base.Die(false);
+        healthBarScript.SetActive(false);
+        StartCoroutine(enterDeathMenu());
+        Destroy(gameObject);
+    }
+
+    private IEnumerator enterDeathMenu()
+    {
+        yield return new WaitForSeconds(1);
+        EnterMenu.instance.ToggleMenu("You Win!", false);
+        //Disable this script
+        enabled = false;
     }
 }

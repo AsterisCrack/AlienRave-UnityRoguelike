@@ -8,13 +8,17 @@ public class RoomClearHandler
     private List<SecurityGuard> guards;
     public RoomClearHandler(List<SecurityGuard> guards,List<EnemyHealthHandler> enemies, BossHealthHandler boss)
     {
-        this.numEnemies = enemies.Count + (boss != null ? 1 : 0);
+        this.numEnemies = (enemies!=null ? enemies.Count : 0) + (boss != null ? 1 : 0);
         this.guards = guards;
         //subscribe to events
-        foreach (EnemyHealthHandler enemy in enemies)
+        if (enemies != null)
         {
-            enemy.OnEnemyDeath += EnemyDeath;
+            foreach (EnemyHealthHandler enemy in enemies)
+            {
+                enemy.OnEnemyDeath += EnemyDeath;
+            }
         }
+        
         if (boss != null)
         {
             boss.OnEnemyDeath += EnemyDeath;

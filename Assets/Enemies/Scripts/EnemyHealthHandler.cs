@@ -59,7 +59,7 @@ public class EnemyHealthHandler : MonoBehaviour
         }
     }
 
-    private void Die()
+    protected virtual void Die(bool destroy = true)
     {
         //Disable enemy shoot and enemy gun movement
         gun.GetComponentInChildren<EnemyShoot>().enabled = false;
@@ -67,7 +67,7 @@ public class EnemyHealthHandler : MonoBehaviour
         //Make gun drop
         pickableGun.Drop(false);
         //Call event
-        OnEnemyDeath.Invoke();
-        Destroy(gameObject);
+        if (OnEnemyDeath != null) OnEnemyDeath.Invoke();
+        if (destroy) Destroy(gameObject);
     }
 }
