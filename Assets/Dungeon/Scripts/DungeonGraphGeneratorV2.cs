@@ -46,6 +46,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     [Header("Needed prefabs")]
     [SerializeField] private GameObject roomTriggerPrefab;
     private List<TriggerCreator> triggers = new List<TriggerCreator>();
+    [SerializeField] private GameObject securityGuardPrefab;
 
     [Header("Visualization settings")]
     [SerializeField] private bool visualizeGraph;
@@ -282,6 +283,15 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             DrawTilemap();
             stopwatch.Stop();
             if (verbose) Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
+
+            //Place the guards
+            foreach (Node node in nodes)
+            {
+                if (node.type != Node.roomType.start)
+                {
+                    node.CreateGuards(securityGuardPrefab, roomMatrix, matrixDisplacementX, matrixDisplacementY);
+                }
+            }
         }
 
         //Instantiate all triggers

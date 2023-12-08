@@ -42,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
         instance = this;
     }
 
-    public IEnumerator Spawn(Vector2 centerPos, int width, int height, int depth)
+    public IEnumerator Spawn(Vector2 centerPos, int width, int height, int depth, Node node)
     {
         int area = (width+4) * (height+4);
         List<GameObject> enemies = GetEnemies(depth);
@@ -71,14 +71,18 @@ public class EnemySpawner : MonoBehaviour
         }
 
         //Spawn the enemies
+        List<EnemyHealthHandler> enemiesToSpawn = new List<EnemyHealthHandler>();
         for (int i = 0; i < enemyCount; i++)
         {
             Destroy(spawnCircles[i]);
-            Instantiate(enemies[Random.Range(0, enemies.Count)], spawnPositions[i], Quaternion.identity);
+            GameObject enemy = Instantiate(enemies[Random.Range(0, enemies.Count)], spawnPositions[i], Quaternion.identity);
+            enemiesToSpawn.Add(enemy.GetComponent<EnemyHealthHandler>());
         }
+
+        node.CreateRoomClearHandler(enemiesToSpawn, null);
     }  
     
-    public IEnumerator SpawnBoss(Vector2 centerPos)
+    public IEnumerator SpawnBoss(Vector2 centerPos, Node node)
     {
         //Only spawn 1 boss
         GameObject spawnCircleInstance = Instantiate(spawnCircle, centerPos, Quaternion.identity);
@@ -95,7 +99,8 @@ public class EnemySpawner : MonoBehaviour
 
         //Spawn the boss
         Destroy(spawnCircleInstance);
-        Instantiate(bosses[Random.Range(0, bosses.Count)], centerPos, Quaternion.identity);
+        GameObject boss =Instantiate(bosses[Random.Range(0, bosses.Count)], centerPos, Quaternion.identity);
+        node.CreateRoomClearHandler(null, boss.GetComponent<BossHealthHandler>());
     }
 
     private List<GameObject> GetEnemies(int depth)

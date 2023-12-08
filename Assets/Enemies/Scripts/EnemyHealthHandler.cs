@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnemyHealthHandler : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class EnemyHealthHandler : MonoBehaviour
     private PickaableGun pickableGun;
     private GameObject gun;
     protected int currentHealth;
+    public event Action OnEnemyDeath;
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -64,6 +66,8 @@ public class EnemyHealthHandler : MonoBehaviour
         gun.GetComponent<EnemyGunMovement>().enabled = false;
         //Make gun drop
         pickableGun.Drop(false);
+        //Call event
+        OnEnemyDeath.Invoke();
         Destroy(gameObject);
     }
 }

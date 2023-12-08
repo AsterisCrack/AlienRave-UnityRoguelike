@@ -23,7 +23,7 @@ public class RoomTrigger : MonoBehaviour
             Vector2 centerPos = node.Position;
             if (node.type == Node.roomType.boss)
             {
-                StartCoroutine(enemySpawner.SpawnBoss(centerPos));
+                StartCoroutine(enemySpawner.SpawnBoss(centerPos, node));
             }
             else if (node.type == Node.roomType.shop)
             {
@@ -35,7 +35,7 @@ public class RoomTrigger : MonoBehaviour
             }
             else
             {
-                StartCoroutine(enemySpawner.Spawn(centerPos, width, height, depth));
+                StartCoroutine(enemySpawner.Spawn(centerPos, width, height, depth, node));
             }
             
         }

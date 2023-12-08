@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 using UnityEngine;
 
 public class Node
@@ -29,6 +30,8 @@ public class Node
     public int depth;
     public bool visited;
 
+    List<SecurityGuard> guards = new List<SecurityGuard>();
+
     //Initialise the node
     public Node(int id, int x, int y, Room room, int roomWidth=0, int roomHeight=0, roomType type=roomType.normal)
     {
@@ -54,5 +57,98 @@ public class Node
     public void AddNeighbour(Node node)
     {
         neighbours.Add(node);
+    }
+
+    public void CreateGuards(GameObject securityGuardPrefab, bool[,] dungeonMatrix, float displacementX, float displacementY)
+    {
+        this.guards = new List<SecurityGuard>();
+        //Go throug the wall tilemap and see if there is an empry space at the frontier of the room. If there is, create a guard there
+        for (int i = (int)x - roomWidth / 2; i < x + roomWidth / 2; i++)
+        {
+            try { 
+                Vector3 pos = new Vector3(i - displacementX, y + roomHeight / 2 - displacementY, 0);
+                if (dungeonMatrix[(int)pos.x, (int)pos.y] && dungeonMatrix.GetLength(0) > (int)pos.x + 1)
+                {
+                    if (!dungeonMatrix[(int)pos.x + 1, (int)pos.y])
+                    {
+                        Vector2 bottomDoorPos = new Vector2(pos.x + displacementX, pos.y + displacementY);
+                        SecurityGuard guard = SecurityGuardSpawner.instance.CreateGuard(bottomDoorPos, SecurityGuard.GuardPosition.Up, this);
+                        this.guards.Add(guard);
+                    }
+                }
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                
+            }
+        }
+
+        for (int i = (int)x - roomWidth / 2; i < x + roomWidth / 2; i++)
+        {
+            try
+            {
+                Vector3 pos = new Vector3(i - displacementX, y - roomHeight / 2 - displacementY, 0);
+                if (dungeonMatrix[(int)pos.x, (int)pos.y] && dungeonMatrix.GetLength(0) > (int)pos.x + 1)
+                {
+                    if (!dungeonMatrix[(int)pos.x + 1, (int)pos.y])
+                    {
+                        Vector2 topDoorPos = new Vector2(pos.x + displacementX, pos.y + displacementY);
+                        SecurityGuard guard = SecurityGuardSpawner.instance.CreateGuard(topDoorPos, SecurityGuard.GuardPosition.Down, this);
+                        this.guards.Add(guard);
+                    }
+                }
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+
+            }
+        }
+
+        for (int i = (int)y - roomHeight / 2; i < y + roomHeight / 2; i++)
+        {
+            try
+            {
+                Vector3 pos = new Vector3(x + roomWidth / 2 - displacementX, i - displacementY, 0);
+                if (dungeonMatrix[(int)pos.x, (int)pos.y] && dungeonMatrix.GetLength(1) > (int)pos.y + 1)
+                {
+                    if (!dungeonMatrix[(int)pos.x, (int)pos.y + 1])
+                    {
+                        Vector2 leftDoorPos = new Vector2(pos.x + displacementX, pos.y + displacementY);
+                        SecurityGuard guard = SecurityGuardSpawner.instance.CreateGuard(leftDoorPos, SecurityGuard.GuardPosition.Right, this);
+                        this.guards.Add(guard);
+                    }
+                }
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+
+            }
+        }
+
+        for (int i = (int)y - roomHeight / 2; i < y + roomHeight / 2; i++)
+        {
+            try
+            {
+                Vector3 pos = new Vector3(x - roomWidth / 2 - displacementX, i - displacementY, 0);
+                if (dungeonMatrix[(int)pos.x, (int)pos.y] && dungeonMatrix.GetLength(1) > (int)pos.y + 1)
+                {
+                    if (!dungeonMatrix[(int)pos.x, (int)pos.y + 1])
+                    {
+                        Vector2 rightDoorPos = new Vector2(pos.x + displacementX, pos.y + displacementY);
+                        SecurityGuard guard = SecurityGuardSpawner.instance.CreateGuard(rightDoorPos, SecurityGuard.GuardPosition.Left, this);
+                        this.guards.Add(guard);
+                    }
+                }
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+
+            }
+        }
+    }
+
+    public void CreateRoomClearHandler(List<EnemyHealthHandler> enemies, BossHealthHandler boss)
+    {
+        RoomClearHandler roomClearHandler = new RoomClearHandler(this.guards, enemies, boss);
     }
 }
