@@ -39,8 +39,10 @@ public class AdvancedBulletEmmiter : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction shootAction;
     private InputAction reloadAction;
+    private InputAction menuAction;
     public InputAction ShootAction { get => shootAction; set => shootAction = value; }
     public InputAction ReloadAction { get => reloadAction; set => reloadAction = value; }
+    public InputAction MenuAction { get => menuAction; set => menuAction = value; }
 
     private void Awake()
     {
@@ -69,6 +71,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
         reloadAction = playerInput.actions["Reload"];
+        menuAction = playerInput.actions["Menu"];
     }
 
     public void RechargeAmmo()
@@ -175,9 +178,8 @@ public class AdvancedBulletEmmiter : MonoBehaviour
 
     public void StartReload()
     {
-        
+        return;
     }
-
     public void Reload()
     {
         //Reset the clip size

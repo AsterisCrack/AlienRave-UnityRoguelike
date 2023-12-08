@@ -284,12 +284,15 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
             stopwatch.Stop();
             if (verbose) Debug.Log("Tilemap drawn in: " + stopwatch.ElapsedMilliseconds + " ms");
 
-            //Place the guards
-            foreach (Node node in nodes)
+            //Place the guards. Only in play mode
+            if (Application.isPlaying)
             {
-                if (node.type != Node.roomType.start)
+                foreach (Node node in nodes)
                 {
-                    node.CreateGuards(securityGuardPrefab, roomMatrix, matrixDisplacementX, matrixDisplacementY);
+                    if (node.type != Node.roomType.start)
+                    {
+                        node.CreateGuards(securityGuardPrefab, roomMatrix, matrixDisplacementX, matrixDisplacementY);
+                    }
                 }
             }
         }

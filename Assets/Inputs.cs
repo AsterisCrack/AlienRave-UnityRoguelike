@@ -107,6 +107,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa3e3979-3bc2-4e18-a263-b746b70c33d9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -307,6 +316,17 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""action"": ""DropGun"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c807a66f-3fb9-4079-a0d7-da9c351bfc76"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -324,6 +344,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         m_Gameplay_GunChangeUp = m_Gameplay.FindAction("GunChangeUp", throwIfNotFound: true);
         m_Gameplay_GunChangeDown = m_Gameplay.FindAction("GunChangeDown", throwIfNotFound: true);
+        m_Gameplay_Menu = m_Gameplay.FindAction("Menu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -394,6 +415,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Dash;
     private readonly InputAction m_Gameplay_GunChangeUp;
     private readonly InputAction m_Gameplay_GunChangeDown;
+    private readonly InputAction m_Gameplay_Menu;
     public struct GameplayActions
     {
         private @Inputs m_Wrapper;
@@ -407,6 +429,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputAction @GunChangeUp => m_Wrapper.m_Gameplay_GunChangeUp;
         public InputAction @GunChangeDown => m_Wrapper.m_Gameplay_GunChangeDown;
+        public InputAction @Menu => m_Wrapper.m_Gameplay_Menu;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -443,6 +466,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @GunChangeDown.started += instance.OnGunChangeDown;
             @GunChangeDown.performed += instance.OnGunChangeDown;
             @GunChangeDown.canceled += instance.OnGunChangeDown;
+            @Menu.started += instance.OnMenu;
+            @Menu.performed += instance.OnMenu;
+            @Menu.canceled += instance.OnMenu;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -474,6 +500,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @GunChangeDown.started -= instance.OnGunChangeDown;
             @GunChangeDown.performed -= instance.OnGunChangeDown;
             @GunChangeDown.canceled -= instance.OnGunChangeDown;
+            @Menu.started -= instance.OnMenu;
+            @Menu.performed -= instance.OnMenu;
+            @Menu.canceled -= instance.OnMenu;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -502,5 +531,6 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnGunChangeUp(InputAction.CallbackContext context);
         void OnGunChangeDown(InputAction.CallbackContext context);
+        void OnMenu(InputAction.CallbackContext context);
     }
 }
