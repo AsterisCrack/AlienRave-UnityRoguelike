@@ -51,7 +51,7 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
     [Header("Visualization settings")]
     [SerializeField] private bool visualizeGraph;
     [SerializeField] private float nodeSize;
-    [SerializeField] private bool drawFrontier;
+    [SerializeField] private bool drawFrontier;                                
 
     private List<Vector2> testingPosList = new List<Vector2>();
 
@@ -1166,13 +1166,6 @@ public class DungeonGraphGeneratorV2 : MonoBehaviour
                 //Draw a rectangle with node.width and node.height
                 Gizmos.DrawWireCube(node.Position * nodeSize + offset, new Vector3(node.RoomWidth * nodeSize, node.RoomHeight * nodeSize, 0));
             }
-
-            //Text of node.rank
-            GUIStyle style = new GUIStyle();
-            style.normal.textColor = Color.white;
-            style.fontSize = 10;
-            UnityEditor.Handles.Label(node.Position * nodeSize + offset, node.depth.ToString(), style);
-
         }
 
         Gizmos.color = Color.yellow;

@@ -132,8 +132,10 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         ammoCounter = UIAmmoCounter.instance;
         if (currentAmmo == -1) currentAmmo = totalAmmo;
         if (currentClip == -1) currentClip = clipSize;
-        ammoCounter.SetAmmoCounter(currentAmmo);
-        ammoCounter.SetClipCounter(currentClip);
+        if (ammoCounter != null) { 
+            ammoCounter.SetAmmoCounter(currentAmmo);
+            ammoCounter.SetClipCounter(currentClip);
+        }
 
         //Set particle system speed to bullet speed
         var main = system.main;
