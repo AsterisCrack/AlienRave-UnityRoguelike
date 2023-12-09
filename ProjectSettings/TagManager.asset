@@ -6,6 +6,12 @@ TagManager:
   tags:
   - CollidableWall
   - Cube
+  - Character
+  - Enemy
+  - BulletEmitter
+  - CharacterBullet
+  - EnemyBullet
+  - BossHealthBar
   layers:
   - Default
   - TransparentFX
@@ -13,10 +19,10 @@ TagManager:
   - CollidableWall
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - DropedItem
+  - PickedGun
+  - Player
+  - Enemy
   - 
   - 
   - 

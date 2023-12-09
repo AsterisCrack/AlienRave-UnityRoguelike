@@ -3,52 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AutoShoot : MonoBehaviour
+public class AutoShoot : ShootScript
 {
-    public AdvancedBulletEmmiter emmiterSettings;
-
-    //Needed variables
-    private float cooldownTimer;
-    private bool isReloading;
-    private int currentAmmo;
-    private int currentClip;
-    private bool canShoot;
-    private float reloadTime;
-    private InputAction shootAction;
-    private InputAction reloadAction;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        emmiterSettings = GetComponent<AdvancedBulletEmmiter>();
-        cooldownTimer = 0;
-        isReloading = false;
-        currentAmmo = emmiterSettings.TotalAmmo;
-        currentClip = emmiterSettings.ClipSize;
-        canShoot = true;
-        reloadTime = emmiterSettings.ReloadTime;
-        shootAction = emmiterSettings.ShootAction;
-        reloadAction = emmiterSettings.ReloadAction;
-    }
-
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        if (shootAction.IsPressed() && canShoot && !isReloading)
+        //Call parent update
+        base.Update();
+        if (inMenu)
+        {
+            return;
+        }
+        if (shootAction.IsPressed() && canShoot && !isReloading && !playerMovement.IsDashing)
         {
             if (currentClip > 0)
             {
                 Shoot();
             }
         }
-        if (shootAction.WasReleasedThisFrame() && canShoot && !isReloading)
+
+        else if (reloadAction.WasPerformedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
+        {
+            if (currentClip < emmiterSettings.ClipSize)
+            {
+                StartCoroutine(Reload());
+            }
+        }
+
+        if (shootAction.WasReleasedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
         {
             if (currentClip <= 0)
             {
                 StartCoroutine(Reload());
             }
         }
+
+        
 
         if (cooldownTimer > 0)
         {
@@ -60,7 +50,7 @@ public class AutoShoot : MonoBehaviour
         }
     }
 
-    private void Shoot()
+    protected override void Shoot()
     {
         emmiterSettings.Shoot();
         currentClip = emmiterSettings.CurrentClip;
@@ -70,7 +60,7 @@ public class AutoShoot : MonoBehaviour
         canShoot = false;
     }
 
-    private IEnumerator Reload()
+    protected override IEnumerator Reload()
     {
         if (currentAmmo <= 0 || currentClip >= emmiterSettings.ClipSize)
         {

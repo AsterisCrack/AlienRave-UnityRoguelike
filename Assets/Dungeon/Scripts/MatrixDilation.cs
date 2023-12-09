@@ -93,4 +93,34 @@ public class MatrixDilation
         }
         return result;
     }
+
+    public (bool[,], bool[,], bool[,], bool[,]) GetWallDilations(bool[,] roomToDilate)
+    {
+        //Now, we will apply the kernel and obttain the walls
+        //We will use a 3x3 kernel for most of the walls, but the top wall will be a 5x5 kernel
+        bool[,] bottomKernel = new bool[3, 3] { { true, true, true },
+                                                { false, true, false },
+                                                { false, false, false } };
+
+        bool[,] topKernel = new bool[5, 5] {    { false, false, false, false, false },
+                                                    { false, false, false, false, false },
+                                                    { false, false, true, false, false },
+                                                    { false, true, true, true, false },
+                                                    { false, true, true, true, false } };
+
+        bool[,] leftKernel = new bool[3, 3] {   { false, false, false },
+                                                    { false, true, true },
+                                                    { false, false, false } };
+
+        bool[,] rightKernel = new bool[3, 3] {  { false, false, false },
+                                                    { true, true, false },
+                                                    { false, false, false } };
+
+        bool[,] wallsBottom = DilateOnlyFrontier(roomToDilate, bottomKernel);
+        bool[,] wallsTop = DilateOnlyFrontier(roomToDilate, topKernel);
+        bool[,] wallsLeft = DilateOnlyFrontier(roomToDilate, leftKernel);
+        bool[,] wallsRight = DilateOnlyFrontier(roomToDilate, rightKernel);
+
+        return (wallsTop, wallsBottom, wallsLeft, wallsRight);
+    }
 }

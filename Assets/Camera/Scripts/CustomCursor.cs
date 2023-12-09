@@ -24,6 +24,5 @@ public class CustomCursor : MonoBehaviour
     {
         mousePosition = Camera.main.ScreenToWorldPoint(playerInput.actions["Aim"].ReadValue<Vector2>());
         mCursorVisual.transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
-        
     }
 }

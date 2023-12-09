@@ -51,9 +51,45 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "DropGun",
+                    "type": "Button",
+                    "id": "027f9168-2b5c-4fbe-818d-0dfc0a26a8ae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Dash",
                     "type": "Button",
                     "id": "4400a425-0aef-4ad6-9208-4c701d4a4009",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GunChangeUp",
+                    "type": "Value",
+                    "id": "68a91b0c-1e69-46d8-aaf3-f894f5251fdd",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "GunChangeDown",
+                    "type": "Value",
+                    "id": "6d5c04fa-8f09-4a10-9dfd-1aa01dc5f444",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "aa3e3979-3bc2-4e18-a263-b746b70c33d9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -225,6 +261,50 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "cc7743b2-dcf1-4147-ac4f-812e2d00267a",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GunChangeUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7feb387e-d792-4b7c-bea1-041726a83d7c",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GunChangeDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fbecad55-a5f8-4182-8c0b-52a18fb3a47a",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DropGun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c807a66f-3fb9-4079-a0d7-da9c351bfc76",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

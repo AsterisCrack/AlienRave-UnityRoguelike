@@ -3,50 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BurstShoot : MonoBehaviour
+public class BurstShoot : ShootScript
 {
-    public AdvancedBulletEmmiter emmiterSettings;
-
-    //Needed variables
-    private bool isReloading;
-    private int currentAmmo;
-    private int currentClip;
-    private int burstCount;
-    private float burstDelay;
-    private bool canShoot;
-    private float reloadTime;
-    private InputAction shootAction;
-    private InputAction reloadAction;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        emmiterSettings = GetComponent<AdvancedBulletEmmiter>();
-        isReloading = false;
-        currentAmmo = emmiterSettings.TotalAmmo;
-        currentClip = emmiterSettings.ClipSize;
-        burstCount = emmiterSettings.BurstCount;
-        burstDelay = emmiterSettings.BurstDelay;
-        canShoot = true;
-        reloadTime = emmiterSettings.ReloadTime;
-        shootAction = emmiterSettings.ShootAction;
-        reloadAction = emmiterSettings.ReloadAction;
-    }
-
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        if (shootAction.WasPressedThisFrame() && canShoot && !isReloading)
+        //Call parent update
+        base.Update();
+        if (inMenu)
+        {
+            return;
+        }
+        if (shootAction.WasPressedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
         {
             if (currentClip > 0)
             {
-                StartCoroutine(ShootBurst());
+                Shoot();
             }
             else
             {
                 StartCoroutine(Reload());
             }
+        }
+
+        else if (reloadAction.WasPerformedThisFrame() && canShoot && !isReloading && !playerMovement.IsDashing)
+        {
+            if (currentClip < emmiterSettings.ClipSize)
+            {
+                StartCoroutine(Reload());
+            }  
         }
 
         if (burstDelay > 0)
@@ -57,6 +42,10 @@ public class BurstShoot : MonoBehaviour
                 canShoot = true;
             }
         }
+    }
+    protected override void Shoot()
+    {
+        StartCoroutine(ShootBurst());
     }
 
     private IEnumerator ShootBurst()
@@ -73,7 +62,7 @@ public class BurstShoot : MonoBehaviour
         burstDelay = emmiterSettings.BurstDelay;
     }
 
-    private IEnumerator Reload()
+    protected override IEnumerator Reload()
     {
         if (currentAmmo <= 0 || currentClip >= emmiterSettings.ClipSize)
         {
