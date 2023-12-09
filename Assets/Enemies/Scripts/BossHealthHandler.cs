@@ -33,7 +33,6 @@ public class BossHealthHandler : EnemyHealthHandler
         base.Die(false);
         healthBarScript.SetActive(false);
         StartCoroutine(enterDeathMenu());
-        Destroy(gameObject);
     }
 
     private IEnumerator enterDeathMenu()
@@ -42,5 +41,6 @@ public class BossHealthHandler : EnemyHealthHandler
         EnterMenu.instance.ToggleMenu("You Win!", false);
         //Disable this script
         enabled = false;
+        Destroy(gameObject);
     }
 }

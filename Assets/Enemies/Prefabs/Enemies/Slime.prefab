@@ -330,6 +330,10 @@ PrefabInstance:
       value: 264
       objectReference: {fileID: 0}
     - target: {fileID: 5066403137336586790, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
+      propertyPath: damage
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066403137336586790, guid: f9a49aa8c53a9474f8ad2f9e078af2fe, type: 3}
       propertyPath: fireRate
       value: 0.2
       objectReference: {fileID: 0}

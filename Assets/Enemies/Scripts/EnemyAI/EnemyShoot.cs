@@ -141,8 +141,9 @@ public class EnemyShoot : PlayerLocator
     public void ShootingBehaviour()
     {
         reloadTimer -= Time.deltaTime;
+        shootTimer -= Time.deltaTime;
         //The enemy tries to shoot if they can
-        if (CanShoot() && reloadTimer <= 0)
+        if (CanShoot() && reloadTimer <= 0 && shootTimer <= 0)
         {
             Shoot();
         }

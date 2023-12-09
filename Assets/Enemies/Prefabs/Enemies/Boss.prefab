@@ -70,11 +70,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3661932935890623652, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
       propertyPath: clipSize
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3661932935890623652, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
       propertyPath: weaponType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3661932935890623652, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
+      propertyPath: bulletSpeed
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5230746676894504469, guid: 7fec447c8ae1a8d469e0caac79516720, type: 3}
       propertyPath: m_Name
@@ -106,5 +110,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a9226529aad9c4abac81b12ea4c370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 2000
   healthBar: {fileID: 0}
