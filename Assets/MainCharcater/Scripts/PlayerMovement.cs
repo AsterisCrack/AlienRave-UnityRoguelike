@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashSpeed = 15f;
     [SerializeField] private float dashDistance = 5f;
     [SerializeField] private float dashCooldown = 0.3f;
-
+    [SerializeField] private AudioClip dashSound;
     private bool isDashing = false; public bool IsDashing { get { return isDashing; } }
     private bool isInmune = false; public bool IsInmune { get { return isInmune; } }
     private bool canDash = true;
@@ -240,6 +240,7 @@ public class PlayerMovement : MonoBehaviour
         dashDistanceLeft = CanDashInDirection(direction);
         float totalDashDistance = dashDistanceLeft;
         float time = Time.time;
+        GameAudioManager.instance.PlaySound(dashSound);
         while (dashDistanceLeft > 0)
         {
             float nextDistance = dashSpeed * Time.deltaTime;

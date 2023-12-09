@@ -3,7 +3,11 @@ guid: d5eb7fa37dd4dbc49bf7ae9b26d9528b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - system: {instanceID: 0}
+  - enemyBulletMaterial: {instanceID: 0}
+  - playerBulletMaterial: {instanceID: 0}
+  - shootSound: {fileID: 8300000, guid: 52ff923a44d19894f8eaea9df52744d5, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -47,5 +47,14 @@ public class EnterMenu : MonoBehaviour
         menu.SetActive(!menu.activeSelf);
         //pause the game
         Time.timeScale = menu.activeSelf ? 0 : 1;
+        //Play menu sound or game sound
+        if (menu.activeSelf)
+        {
+            GameAudioManager.instance.PlayMenuSong();
+        }
+        else
+        {
+            GameAudioManager.instance.ResumeGameSong();
+        }
     }
 }

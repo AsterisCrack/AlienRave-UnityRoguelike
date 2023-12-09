@@ -28,6 +28,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
     private int currentClip = -1;
     public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
     public int CurrentClip { get => currentClip; set => currentClip = value; }
+    private AudioClip shootSound;
 
     //Instances of objects needed
     //Ammo counter UI
@@ -67,6 +68,7 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         shakeMagnitude = weaponStats.shakeMagnitude;
         totalAmmo = weaponStats.totalAmmo;
         clipSize = weaponStats.clipSize;
+        shootSound = weaponStats.shootSound;
 
         playerInput = GetComponent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
@@ -172,6 +174,8 @@ public class AdvancedBulletEmmiter : MonoBehaviour
         ammoCounter.SetClipCounter(currentClip);
         //Play the particle system
         system.Play();
+        //Play the shoot sound
+        GameAudioManager.instance.PlaySound(shootSound);
         //Shake the camera
         cameraShake.ShakeCamera(shakeTime, shakeMagnitude);
     }

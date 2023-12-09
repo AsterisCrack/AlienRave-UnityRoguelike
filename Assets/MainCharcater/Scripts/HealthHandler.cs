@@ -6,6 +6,7 @@ public class HealthHandler : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private AnimationClip deadAnimation;
+    [SerializeField] private AudioClip damageSound;
     private int currentHealth; public int CurrentHealth { get { return currentHealth; } }
     private HeartUIHandler heartUIHandler;
     private PlayerMovement playerMovement;
@@ -50,6 +51,7 @@ public class HealthHandler : MonoBehaviour
     private void TakeDamage(float knockback, Vector2 direction)
     {
         bool healthDecreased = heartUIHandler.LowerHealth();
+        GameAudioManager.instance.PlaySound(damageSound);
         if (healthDecreased)
         {
             currentHealth--;

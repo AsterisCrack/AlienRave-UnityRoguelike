@@ -30,4 +30,5 @@ public class WeaponStats : MonoBehaviour
     [Header("Bullet")]
     [SerializeField] public Material enemyBulletMaterial;
     [SerializeField] public Material playerBulletMaterial;
+    [SerializeField] public AudioClip shootSound;
 }

@@ -28,6 +28,8 @@ public class EnemyShoot : PlayerLocator
     //Enemies have infinite ammo
     private int clipSize;
 
+    private AudioClip shootSound;
+
     private int currentAmmo = -1;
     private int currentClip = -1;
 
@@ -60,6 +62,7 @@ public class EnemyShoot : PlayerLocator
         shakeTime = weaponStats.shakeTime;
         shakeMagnitude = weaponStats.shakeMagnitude;
         clipSize = weaponStats.clipSize;
+        shootSound = weaponStats.shootSound;
 
         //Set the ammo counters according to the 
         switch (weaponType)
@@ -106,6 +109,8 @@ public class EnemyShoot : PlayerLocator
         currentClip--;
         //Play the particle system
         system.Play();
+        //Play the shoot sound
+        GameAudioManager.instance.PlaySound(shootSound);
         //Shake the camera
         cameraShake.ShakeCamera(shakeTime, shakeMagnitude);
         if (currentClip <= 0)

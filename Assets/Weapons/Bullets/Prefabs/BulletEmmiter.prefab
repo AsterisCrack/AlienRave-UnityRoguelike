@@ -4961,3 +4961,4 @@ MonoBehaviour:
   clipSize: 35
   enemyBulletMaterial: {fileID: 2100000, guid: 74bc882234c34d249a4ccc53a758ec2c, type: 2}
   playerBulletMaterial: {fileID: 2100000, guid: 03342b26bf85f714898306563f2839ee, type: 2}
+  shootSound: {fileID: 8300000, guid: 52ff923a44d19894f8eaea9df52744d5, type: 3}
